@@ -33,11 +33,11 @@ model Kullanici {
 
   egitim_durumu String
   // Öğrenci İse zorunlu
-  odeme_planı String
-  odeme_durumu Boolean
+  odeme_planı String?
+  odeme_durumu Boolean?
 
   // öğretmen, müdür, personel ise zorunlu olmalı 
-  maas String
+  maas String?
   
 
   veli_ID String?
