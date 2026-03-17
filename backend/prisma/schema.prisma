@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+enum Roller {
+  YONETICI
+  MUDUR
+  OGRETMEN
+  OGRENCI
+  VELI
+  PERSONEL
+}
+
+
+model Kullanici {
+  id           String    @id @default(uuid())
+  isim  String @db.VarChar(70)
+  soy_isim String @db.VarChar(70)
+
+  tel_no String @db.VarChar(15)
+  mail String  @unique @db.VarChar(255)
+  sifre String @db.VarChar(300)
+  tc_no String @unique @db.VarChar(11)
+  milliyet String @default("TR")
+  dogum_tarihi DateTime
+  rol Roller @default(OGRENCI)
+
+  egitim_durumu String
+  // Öğrenci İse zorunlu
+  odeme_planı String
+  odeme_durumu Boolean
+
+  // öğretmen, müdür, personel ise zorunlu olmalı 
+  maas String
+  
+
+  veli_ID String?
+  veli         Kullanici?  @relation("VeliOgrenciler", fields: [veli_ID], references: [id])
+  ogrenciler   Kullanici[] @relation("VeliOgrenciler")
+
+  // Öğrencinin Bağlı Olduğu Sınıf
+  sinifId      String?
+  sinif        Sinif?      @relation(fields: [sinifId], references: [id])
+
+  // Öğretmenin ve Öğrencinin sistemdeki genel kayıtları
+  ogretmenProgramlari DersProgrami[] @relation("OgretmenProgrami")
+  notlar              SinavNotu[]
+  yoklamalar          Yoklama[]
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+
+
+model Sinif {
+  id           String         @id @default(uuid())
+  isim         String         @unique // Örn: "12-A Sayısal"
+  kapasite     Int
+
+  ogrenciler   Kullanici[]
+  programlar   DersProgrami[]
+}
+
+model Ders {
+  id           String         @id @default(uuid())
+  isim         String         @unique // Örn: matematik
+
+  ders_suresi Int @default(40)
+  programlar   DersProgrami[]
+  notlar       SinavNotu[]
+}
+
+model DersProgrami {
+  id           String    @id @default(uuid())
+  gun          Int       // 1: Pazartesi, 7: Pazar vb.
+  baslangic    String    // Örn: "09:00"
+  bitis        String    // Örn: "09:45"
+
+  sinifId      String
+  sinif        Sinif     @relation(fields: [sinifId], references: [id], onDelete: Cascade)
+
+  dersId       String
+  ders         Ders      @relation(fields: [dersId], references: [id], onDelete: Cascade)
+
+  ogretmenId   String
+  ogretmen     Kullanici @relation("OgretmenProgrami", fields: [ogretmenId], references: [id], onDelete: Cascade)
+
+  yoklamalar   Yoklama[]
+}
+
+model SinavNotu {
+  id           String    @id @default(uuid())
+  sinavAdi     String    // Örn: matematik sınavi
+  puan         Float
+  tarih        DateTime  @default(now())
+
+  ogrenciId    String
+  ogrenci      Kullanici @relation(fields: [ogrenciId], references: [id], onDelete: Cascade)
+
+  dersId       String
+  ders         Ders      @relation(fields: [dersId], references: [id], onDelete: Cascade)
+}
+
+model Yoklama {
+  id             String       @id @default(uuid())
+  tarih          DateTime     @default(now())
+  derseKatildiMi Boolean      @default(false)
+
+  ogrenciId      String
+  ogrenci        Kullanici    @relation(fields: [ogrenciId], references: [id], onDelete: Cascade)
+
+  dersProgramiId String
+  dersProgrami   DersProgrami @relation(fields: [dersProgramiId], references: [id], onDelete: Cascade)
+}
