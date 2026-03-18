@@ -9,6 +9,7 @@ import type {
 
 export const kullaniciKayit = async (data: RegisterRequestBody): Promise<RegisterServiceResponse> => {
   const prisma = getPrismaClient();
+  const maasZorunluRoller = new Set(['OGRETMEN', 'MUDUR', 'PERSONEL']);
 
   // mail veya tc_no daha önce kayıtlı mı kontrol et
   const existingUser = await prisma.kullanici.findFirst({
@@ -21,6 +22,21 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
     throw new Error('Bu email veya TC Kimlik numarası zaten sistemde kayıtlı.');
   }
 
+  if (maasZorunluRoller.has(data.rol) && !data.maas?.trim()) {
+    throw new Error('Bu rol için maas alanı zorunludur.');
+  }
+
+  if (data.rol === 'OGRENCI') {
+    if (!data.odeme_planı?.trim() || typeof data.odeme_durumu !== 'boolean') {
+      throw new Error('Ogrenci kaydi icin odeme_plani ve odeme_durumu alanlari zorunludur.');
+    }
+  }
+
+
+  const odemePlani = data.rol === 'OGRENCI' ? data.odeme_planı!.trim() : '';
+  const odemeDurumu = data.rol === 'OGRENCI' ? data.odeme_durumu! : false;
+  const maas = maasZorunluRoller.has(data.rol) ? data.maas!.trim() : '';
+
   // şifreyi hashle ve 10 turda üret
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(data.password, salt);
@@ -30,15 +46,16 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
     data: {
       mail: data.email,
       sifre: hashedPassword,
+      rol: data.rol,
       isim: data.isim,
       soy_isim: data.soy_isim,
       tel_no: data.tel_no,
       tc_no: data.tc_no,
       dogum_tarihi: new Date(data.dogum_tarihi), 
       egitim_durumu: data.egitim_durumu,
-      odeme_planı: data.odeme_planı,
-      odeme_durumu: data.odeme_durumu,
-      maas: data.maas,
+      odeme_planı: odemePlani,
+      odeme_durumu: odemeDurumu,
+      maas,
 
     }
   });
