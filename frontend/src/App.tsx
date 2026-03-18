@@ -1,8 +1,9 @@
 import './App.css'
 import { Navigate, Route, Routes } from 'react-router'
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { kullaniciRolunuGetir, tokenGetir } from './services/session';
 import type { UserRole } from './services/authApi';
+import { accessTokenYenile } from './services/authApi';
 
 // Yönetici, Müdür, Öğretmen, Öğrenci, Veli, Personel page importları
 import AuthPages from './Pages/AuthPages'
@@ -22,7 +23,7 @@ import Cocuk from './Pages/Kullanici_Pages/Cocugumun_Durumu';
 import Odeme_Planim from './Pages/Kullanici_Pages/Odeme_Planim';
 const isAuthenticated = (): boolean => {
   const token = tokenGetir();
-  return Boolean(token) && token !== 'null' && token !== 'undefined';
+  return Boolean(token);
 };
 
 function ProtectedRoute({ children, allowedRoles }: { children: ReactNode, allowedRoles?: UserRole[] }) {
@@ -40,6 +41,28 @@ function ProtectedRoute({ children, allowedRoles }: { children: ReactNode, allow
 }
 
 function App() {
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    const bootstrapAuth = async () => {
+      const token = tokenGetir();
+      if (!token) {
+        try {
+          await accessTokenYenile();
+        } catch {
+          // Cookie yoksa veya geçersizse giriş ekranına düşmesi beklenen davranış.
+        }
+      }
+
+      setAuthReady(true);
+    };
+
+    void bootstrapAuth();
+  }, []);
+
+  if (!authReady) {
+    return null;
+  }
 
 
   return (

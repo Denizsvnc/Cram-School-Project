@@ -53,6 +53,8 @@ model Kullanici {
   notlar              SinavNotu[]
   yoklamalar          Yoklama[]
 
+  sessions            Session[]
+  
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
@@ -118,4 +120,14 @@ model Yoklama {
 
   dersProgramiId String
   dersProgrami   DersProgrami @relation(fields: [dersProgramiId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  refreshToken String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  
+  userId       String   
+  user         Kullanici @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -1,6 +1,6 @@
-import jwt from "jsonwebtoken";
 import type { NextFunction, Request, Response } from "express";
 import type { TokenPayload } from "../../types";
+import { verifyToken } from '../utils/jwt.utils';
 
 export interface AuthRequest extends Request {
     kullanici?: TokenPayload;
@@ -36,13 +36,8 @@ export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction)
   }
 
   try {
-    // decode et ve doğrula
-    const secret = process.env.JWT_SECRET_KEY;
-    if (!secret) {
-      throw new Error("JWT_SECRET_KEY tanimli degil.");
-    }
-
-    const decoded = jwt.verify(token, secret);
+    // Access tokenı doğrula (cookie kullanılmaz)
+    const decoded = verifyToken(token, false);
     if (!isTokenPayload(decoded)) {
       res.status(401).json({ hata: 'Gecersiz token icerigi.' });
       return;

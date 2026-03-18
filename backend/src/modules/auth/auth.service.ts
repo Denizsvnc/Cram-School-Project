@@ -1,11 +1,18 @@
 import bcrypt from 'bcrypt';
-import { generateToken } from "../../core/utils/jwt.utils";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyToken
+} from '../../core/utils/jwt.utils';
 import { getPrismaClient } from '../../core/config/prisma';
 import type {
   LoginServiceResponse,
+  RefreshServiceResponse,
   RegisterRequestBody,
   RegisterServiceResponse
 } from '../../types';
+
+const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 export const kullaniciKayit = async (data: RegisterRequestBody): Promise<RegisterServiceResponse> => {
   const prisma = getPrismaClient();
@@ -86,16 +93,59 @@ export const kullaniciGiris = async (mail: string, sifre: string): Promise<Login
 
   const role = user.rol;
 
-  // token üret
+  // Access ve Refresh token üret
   const tokenPayload = { id: user.id, email: user.mail, role };
-  const token = generateToken(tokenPayload);
+  const accessToken = generateAccessToken(tokenPayload);
+  const refreshToken = generateRefreshToken(tokenPayload);
 
-  // 4. Şifreyi gizleyerek kullanıcı ve token bilgilerini döndür
+  await prisma.session.create({
+    data: {
+      refreshToken,
+      expiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL_MS),
+      userId: user.id
+    }
+  });
+
+  // Şifreyi gizleyerek kullanıcı ve token bilgilerini döndür
   const { sifre: _sifre, ...userWithoutPassword } = user;
   
   return {
     user: userWithoutPassword,
     role,
-    token
+    accessToken,
+    refreshToken,
   };
+};
+
+export const tokenYenile = async (refreshToken: string): Promise<RefreshServiceResponse> => {
+  const prisma = getPrismaClient();
+
+  const payload = verifyToken(refreshToken, true);
+
+  const activeSession = await prisma.session.findUnique({
+    where: { refreshToken },
+    include: {
+      user: true
+    }
+  });
+
+  if (!activeSession || activeSession.expiresAt <= new Date()) {
+    throw new Error('Refresh token gecersiz veya suresi dolmus.');
+  }
+
+  const nextAccessToken = generateAccessToken({
+    id: payload.id,
+    email: payload.email,
+    role: payload.role
+  });
+
+  return { accessToken: nextAccessToken };
+};
+
+export const cikisYap = async (refreshToken: string): Promise<void> => {
+  const prisma = getPrismaClient();
+
+  await prisma.session.deleteMany({
+    where: { refreshToken }
+  });
 };

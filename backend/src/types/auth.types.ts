@@ -31,7 +31,12 @@ export interface RegisterServiceResponse extends SafeKullanici {}
 export interface LoginServiceResponse {
   user: SafeKullanici;
   role: UserRole;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface RefreshServiceResponse {
+  accessToken: string;
 }
 
 export interface ApiErrorResponse {

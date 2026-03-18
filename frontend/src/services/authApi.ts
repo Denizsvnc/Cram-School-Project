@@ -1,5 +1,6 @@
 import axios from 'axios';
 import api from './api';
+import { oturumTemizle, rolKaydet, tokenKaydet } from './session';
 
 export type UserRole = 'YONETICI' | 'MUDUR' | 'OGRETMEN' | 'OGRENCI' | 'VELI' | 'PERSONEL';
 
@@ -27,7 +28,11 @@ export type LoginResponse = {
   mesaj: string;
   kullanici: Record<string, unknown>;
   role: UserRole;
-  token: string;
+  accessToken: string;
+};
+
+export type RefreshResponse = {
+  accessToken: string;
 };
 
 type ApiErrorBody = {
@@ -50,11 +55,30 @@ const getApiErrorMessage = (error: unknown, fallback: string): string => {
 export const girisYap = async (payload: LoginPayload) => {
   try {
     const { data } = await api.post<LoginResponse>('/giris', payload);
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('role', data.role);
+    tokenKaydet(data.accessToken);
+    rolKaydet(data.role);
     return data;
   } catch (error: unknown) {
     throw new Error(getApiErrorMessage(error, 'Giris basarisiz.'));
+  }
+};
+
+export const accessTokenYenile = async (): Promise<string> => {
+  try {
+    const { data } = await api.post<RefreshResponse>('/refresh');
+    tokenKaydet(data.accessToken);
+    return data.accessToken;
+  } catch (error: unknown) {
+    oturumTemizle();
+    throw new Error(getApiErrorMessage(error, 'Oturum yenilenemedi.'));
+  }
+};
+
+export const cikisYap = async (): Promise<void> => {
+  try {
+    await api.post('/logout');
+  } finally {
+    oturumTemizle();
   }
 };
 

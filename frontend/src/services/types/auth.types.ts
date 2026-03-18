@@ -1,7 +1,6 @@
 export type LoginPayload = {
   email: string;
   password: string;
-  rol: string;
 };
 
 export type RegisterPayload = {
@@ -16,6 +15,7 @@ export type RegisterPayload = {
 };
 
 export interface LoginResponse {
+  mesaj: string;
   kullanici: {
     id: string;
     mail: string;
@@ -31,7 +31,7 @@ export interface LoginResponse {
     rol: string;
   };
   role: string;
-  token: string;
+  accessToken: string;
 }
 
 export interface RegisterResponse {
