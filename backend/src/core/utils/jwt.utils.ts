@@ -9,7 +9,7 @@ export const generateToken = (payload: TokenPayload) : string => {
     }
     else {
         try {
-            return jwt.sign(payload, secretKey, {expiresIn: "3d"});
+            return jwt.sign(payload, secretKey, {expiresIn: "1h"});
         } catch (error) {
             console.error("Token oluşturma hatası:", error);
             throw new Error("Token oluşturulurken bir hata oluştu.");

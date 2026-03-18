@@ -1,10 +1,13 @@
+import { Outlet } from 'react-router'
 import Sidebar from '../Components/Sidebar'
 
 function Panel() {
   return (
-    <div>
-      <h1>Panel</h1>
-        <Sidebar />
+    <div style={{ display: 'flex' }}>
+      <Sidebar />
+      <div style={{ flex: 1, padding: '20px' }}>
+        <Outlet />
+      </div>
     </div>
   )
 }

@@ -10,24 +10,37 @@ const menuByRole: Record<UserRole, MenuItem[]> = {
     { label: 'Dashboard', to: '/panel' },
     { label: 'Kullanicilar', to: '/panel/kullanicilar' },
     { label: 'Ayarlar', to: '/panel/ayarlar' },
+    { label: 'Siniflar', to: '/panel/siniflar' },
+    { label: 'Kayit Islemleri', to: '/panel/kayit-islemleri' },
+
+
   ],
   MUDUR: [
     { label: 'Dashboard', to: '/panel' },
     { label: 'Siniflar', to: '/panel/siniflar' },
+    { label: 'Kayit Islemleri', to: '/panel/kayit-islemleri' },
+
   ],
   OGRETMEN: [
     { label: 'Dashboard', to: '/panel' },
     { label: 'Programim', to: '/panel/program' },
     { label: 'Not Girisi', to: '/panel/notlar' },
+    { label: 'Siniflar', to: '/panel/siniflar' },
+
+
   ],
   OGRENCI: [
     { label: 'Dashboard', to: '/panel' },
     { label: 'Ders Programim', to: '/panel/program' },
     { label: 'Notlarim', to: '/panel/notlarim' },
+    { label: 'Ödeme Planım', to: '/panel/plan' },
+
   ],
   VELI: [
     { label: 'Dashboard', to: '/panel' },
     { label: 'Cocugumun Durumu', to: '/panel/cocuk' },
+    { label: 'Ödeme Planım', to: '/panel/plan' },
+    
   ],
   PERSONEL: [
     { label: 'Dashboard', to: '/panel' },
