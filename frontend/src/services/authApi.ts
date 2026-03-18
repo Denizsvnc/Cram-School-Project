@@ -1,6 +1,6 @@
 import axios from 'axios';
 import api from './api';
-import { oturumTemizle, rolKaydet, tokenKaydet } from './session';
+import { oturumTemizle, tokenKaydet } from './session';
 
 export type UserRole = 'YONETICI' | 'MUDUR' | 'OGRETMEN' | 'OGRENCI' | 'VELI' | 'PERSONEL';
 
@@ -56,7 +56,6 @@ export const girisYap = async (payload: LoginPayload) => {
   try {
     const { data } = await api.post<LoginResponse>('/giris', payload);
     tokenKaydet(data.accessToken);
-    rolKaydet(data.role);
     return data;
   } catch (error: unknown) {
     throw new Error(getApiErrorMessage(error, 'Giris basarisiz.'));

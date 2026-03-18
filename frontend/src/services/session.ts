@@ -1,13 +1,11 @@
+import { jwtDecode } from 'jwt-decode';
 import type { UserRole } from "./authApi";
 
-export const kullaniciRolunuGetir = (): UserRole | null => {
-    const rol = sessionStorage.getItem('role');
-    if(!rol) {
-        return null;
-        
-    }
-    return rol as UserRole;
-}   
+export interface TokenPayload {
+  id: string;
+  email: string;
+  role: UserRole;
+}
 
 export const tokenGetir = (): string | null => sessionStorage.getItem('token');
 
@@ -19,15 +17,17 @@ export const tokenTemizle = (): void => {
     sessionStorage.removeItem('token');
 };
 
-export const rolKaydet = (rol: UserRole): void => {
-    sessionStorage.setItem('role', rol);
-};
-
-export const rolTemizle = (): void => {
-    sessionStorage.removeItem('role');
-};
-
 export const oturumTemizle = (): void => {
     tokenTemizle();
-    rolTemizle();
+};
+
+export const kullaniciRolunuGetir = (): UserRole | null => {
+    const token = tokenGetir();
+    if (!token) return null;
+    try {
+        const decoded = jwtDecode<TokenPayload>(token);
+        return decoded.role;
+    } catch {
+        return null;
+    }
 };

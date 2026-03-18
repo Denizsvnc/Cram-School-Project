@@ -1,7 +1,7 @@
 import {Link} from 'react-router-dom'
-import {Box} from '@mui/material'
+import {Box, Button} from '@mui/material'
 import { kullaniciRolunuGetir } from '../services/session';
-import type { UserRole } from '../services/authApi';
+import { cikisYap, type UserRole } from '../services/authApi';
 
 type MenuItem = {label: string, to: string}
 
@@ -49,6 +49,17 @@ const menuByRole: Record<UserRole, MenuItem[]> = {
 };
 function Sidebar() {
     const role = kullaniciRolunuGetir();
+   
+    const handleCikis = async () => {
+      try {
+        await cikisYap();
+      }catch (error) {
+        console.error('Çıkış yaparken hata oluştu:', error);
+      } finally {
+        window.location.href = '/giris';
+      }
+    }
+    
   const menu = role ? menuByRole[role] : [];
   return (
     <>
@@ -63,6 +74,8 @@ function Sidebar() {
         </div>
         ))}
     </Box>
+
+    <Button onClick={handleCikis}> Çıkış Yap</Button>
 
     
     </>
