@@ -21,7 +21,7 @@ export const ogrencileriGetir = async () => {
             tc_no: true,
             dogum_tarihi: true,
             egitim_durumu: true,
-            odeme_planı: true,
+            odeme_plani: true,
             odeme_durumu: true,
             createdAt: true, 
             
@@ -91,7 +91,7 @@ export const ogrenciGetirById = async (ogrenciNo: number) => {
             tc_no: true,
             dogum_tarihi: true,
             egitim_durumu: true,
-            odeme_planı: true,
+            odeme_plani: true,
             odeme_durumu: true,
             createdAt: true, 
             

@@ -39,7 +39,7 @@ model Kullanici {
 
   egitim_durumu String
   // Öğrenci İse zorunlu
-  odeme_planı String?
+  odeme_plani String?
   odeme_durumu Boolean?
 
   // öğretmen, müdür, personel ise zorunlu olmalı 
@@ -76,6 +76,8 @@ model Sinif {
 
   ogrenciler   Kullanici[]
   programlar   DersProgrami[]
+  aktifMi Boolean @default(true)
+
 }
 
 model Ders {

@@ -23,7 +23,7 @@ export const personelleriGetir = async (filtreRol?: Roller) => {
             tc_no: true,
             dogum_tarihi: true,
             egitim_durumu: true,
-            odeme_planı: true,
+            odeme_plani: true,
             odeme_durumu: true,
             createdAt: true, 
             
