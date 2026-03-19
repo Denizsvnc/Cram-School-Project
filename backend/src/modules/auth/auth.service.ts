@@ -14,10 +14,47 @@ import type {
 
 const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
+const yeniOgrenciNoUret = async (): Promise<number> => {
+    const prisma = getPrismaClient();
+    const sonOgrenci = await prisma.kullanici.findFirst({
+        where: { rol: "OGRENCI" },
+        orderBy: { ogrenciNo: 'desc' },
+        select: { ogrenciNo: true }
+    });
+
+    // Eğer hiç öğrenci yoksa başlangıç numarası 
+    if (!sonOgrenci || !sonOgrenci.ogrenciNo) {
+        return 1; 
+    }
+
+    return sonOgrenci.ogrenciNo + 1;
+};
+const yeniPersonelNoUret = async (): Promise<number> => {
+    const prisma = getPrismaClient();
+    const sonPersonel = await prisma.kullanici.findFirst({
+        where: { 
+            rol: { 
+                in: ["MUDUR", "OGRETMEN", "PERSONEL"] 
+            } 
+        },
+        orderBy: { personelNo: 'desc' },
+        select: { personelNo: true }
+    });
+
+    // Eğer hiç personel yoksa başlangıç numarası 
+    if (!sonPersonel || !sonPersonel.personelNo) {
+        return 1; 
+    }
+
+    return sonPersonel.personelNo + 1;
+};
 export const kullaniciKayit = async (data: RegisterRequestBody): Promise<RegisterServiceResponse> => {
   const prisma = getPrismaClient();
   const maasZorunluRoller = new Set(['OGRETMEN', 'MUDUR', 'PERSONEL']);
+  const ogrenciNoZorunluRoller = new Set(['OGRENCI']);
+  const personelNoZorunluRoller = new Set(['MUDUR', 'OGRETMEN', 'PERSONEL']);
 
+ 
   // mail veya tc_no daha önce kayıtlı mı kontrol et
   const existingUser = await prisma.kullanici.findFirst({
     where: {
@@ -28,7 +65,8 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
   if (existingUser) {
     throw new Error('Bu email veya TC Kimlik numarası zaten sistemde kayıtlı.');
   }
-
+  const isOgrenci = data.rol === 'OGRENCI';
+  const isPersonel = personelNoZorunluRoller.has(data.rol);
   if (maasZorunluRoller.has(data.rol) && !data.maas?.trim()) {
     throw new Error('Bu rol için maas alanı zorunludur.');
   }
@@ -37,6 +75,7 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
     if (!data.odeme_planı?.trim() || typeof data.odeme_durumu !== 'boolean') {
       throw new Error('Ogrenci kaydi icin odeme_plani ve odeme_durumu alanlari zorunludur.');
     }
+    
   }
 
 
@@ -47,8 +86,10 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
   // şifreyi hashle ve 10 turda üret
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(data.password, salt);
+  const uretilenNo = isOgrenci ? await yeniOgrenciNoUret() : null
+  const uretilenPersonelNo = isPersonel ? await yeniPersonelNoUret() : null
 
-  // 3. Kullanıcıyı veritabanına kaydet
+  //  Kullanıcıyı veritabanına kaydet
   const newUser = await prisma.kullanici.create({
     data: {
       mail: data.email,
@@ -63,6 +104,9 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
       odeme_planı: odemePlani,
       odeme_durumu: odemeDurumu,
       maas,
+      ogrenciNo: uretilenNo,
+      personelNo: uretilenPersonelNo
+
 
     }
   });

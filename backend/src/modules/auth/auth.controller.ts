@@ -11,12 +11,12 @@ const REFRESH_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 
 const buildRefreshCookieOptions = () => ({
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
+ 
+  secure: false, 
   sameSite: 'lax' as const,
   maxAge: REFRESH_COOKIE_MAX_AGE,
-  path: '/'
+  path: '/' 
 });
-
 
 export const kayit = async (
   req: Request<unknown, unknown, RegisterRequestBody>,

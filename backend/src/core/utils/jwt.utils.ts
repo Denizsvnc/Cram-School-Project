@@ -1,7 +1,12 @@
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 import type { TokenPayload } from "../../types";
+import dotenv from "dotenv";
+dotenv.config();
 
-// 1. Access Token: Kısa ömürlü (Örn: 15 dakika)
+const ACCESS_TOKEN_EXPIRES_IN: string = process.env.ACCESS_TOKEN_EXPIRES_IN || "15m";
+const REFRESH_TOKEN_EXPIRES_IN: string = process.env.REFRESH_TOKEN_EXPIRES_IN || "7d";
+
+// 1. Access token kısa omurlu
 export const generateAccessToken = (payload: TokenPayload): string => {
     const secretKey = process.env.ACCESS_TOKEN_SECRET;
 
@@ -10,8 +15,10 @@ export const generateAccessToken = (payload: TokenPayload): string => {
     }
 
     try {
-        // expiresIn: "15m" (15 dakika) olarak ayarlandı
-        return jwt.sign(payload, secretKey, { expiresIn: "15m" });
+        // NonNullable kullanarak undefined ihtimalini tipten çıkartıyoruz
+        return jwt.sign(payload, secretKey, { 
+            expiresIn: ACCESS_TOKEN_EXPIRES_IN as NonNullable<SignOptions["expiresIn"]>
+        });
     } catch (error) {
         console.error("Access Token oluşturma hatası:", error);
         throw new Error("Access Token oluşturulurken bir hata oluştu.");
@@ -27,8 +34,10 @@ export const generateRefreshToken = (payload: TokenPayload): string => {
     }
 
     try {
-        // expiresIn: "7d" (7 gün) olarak ayarlandı
-        return jwt.sign(payload, secretKey, { expiresIn: "7d" });
+        // Burada da aynı şekilde NonNullable kullanıyoruz
+        return jwt.sign(payload, secretKey, { 
+            expiresIn: REFRESH_TOKEN_EXPIRES_IN as NonNullable<SignOptions["expiresIn"]>
+        });
     } catch (error) {
         console.error("Refresh Token oluşturma hatası:", error);
         throw new Error("Refresh Token oluşturulurken bir hata oluştu.");

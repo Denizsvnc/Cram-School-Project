@@ -30,6 +30,8 @@ model Kullanici {
   milliyet String @default("TR")
   dogum_tarihi DateTime
   rol Roller @default(OGRENCI)
+  ogrenciNo     Int?      @unique
+  personelNo     Int?      @unique
 
   egitim_durumu String
   // Öğrenci İse zorunlu
