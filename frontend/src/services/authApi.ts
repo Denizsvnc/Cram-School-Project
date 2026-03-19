@@ -29,6 +29,7 @@ export type LoginResponse = {
   kullanici: Record<string, unknown>;
   role: UserRole;
   accessToken: string;
+  pp_url?: string;
 };
 
 export type RefreshResponse = {

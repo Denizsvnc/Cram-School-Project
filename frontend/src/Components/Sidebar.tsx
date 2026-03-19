@@ -63,24 +63,26 @@ function Sidebar() {
     
   const menu = role ? menuByRole[role] : [];
   return (
-    <>
     <Box className="sidebar-container">
-
-        <h4>Arac Çubuğu</h4>
-
+      <div className="sidebar-logo">
+        <span className="logo-title">Araç Çubuğu</span>
+      </div>
+      <div className="sidebar-menu">
         {menu.map((item) => (
-        <div key={item.to}>
-
-            <Link to={item.to}>{item.label}</Link>
-        </div>
+          <div className="link-container" key={item.to}>
+            <Link className="sidebar-item" to={item.to}>
+              <span className="sidebar-icon">•</span>
+              {item.label}
+            </Link>
+          </div>
         ))}
+      </div>
+      <Button className="sidebar-logout" onClick={handleCikis} variant="contained" color="error">
+        Çıkış Yap
+      </Button>
     </Box>
-
-    <Button onClick={handleCikis}> Çıkış Yap</Button>
-
-    
-    </>
   );
+
 }
 
 export default Sidebar

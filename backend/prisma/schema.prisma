@@ -44,7 +44,7 @@ model Kullanici {
 
   // öğretmen, müdür, personel ise zorunlu olmalı 
   maas String?
-  
+  profil_foto_url String?
 
   veli_ID String?
   veli         Kullanici?  @relation("VeliOgrenciler", fields: [veli_ID], references: [id])
