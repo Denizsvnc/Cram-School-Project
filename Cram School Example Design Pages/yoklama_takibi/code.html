@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Akademi Modern - Yoklama Takibi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eff1f5",
+              "inverse-surface": "#2d3134",
+              "surface": "#f7f9fd",
+              "on-background": "#191c1f",
+              "surface-container-high": "#e6e8ec",
+              "secondary-fixed": "#dee0ff",
+              "primary-fixed-dim": "#bdc2ff",
+              "primary-fixed": "#e0e0ff",
+              "on-surface": "#191c1f",
+              "on-primary-container": "#8690ee",
+              "on-primary": "#ffffff",
+              "surface-container-low": "#f2f4f8",
+              "surface-tint": "#4c56af",
+              "surface-container-highest": "#e0e2e6",
+              "on-error": "#ffffff",
+              "surface-dim": "#d8dade",
+              "outline-variant": "#c6c5d4",
+              "outline": "#767683",
+              "on-secondary-fixed-variant": "#2c3c9e",
+              "surface-bright": "#f7f9fd",
+              "on-tertiary": "#ffffff",
+              "on-tertiary-fixed": "#390c00",
+              "background": "#f7f9fd",
+              "secondary-fixed-dim": "#bbc3ff",
+              "secondary": "#4555b7",
+              "surface-variant": "#e0e2e6",
+              "secondary-container": "#8999ff",
+              "tertiary-container": "#5c1800",
+              "primary-container": "#1a237e",
+              "on-primary-fixed": "#000767",
+              "tertiary-fixed-dim": "#ffb59d",
+              "on-secondary": "#ffffff",
+              "surface-container": "#eceef2",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed-variant": "#7b2e12",
+              "error": "#ba1a1a",
+              "tertiary": "#380b00",
+              "on-secondary-fixed": "#000e5e",
+              "on-secondary-container": "#182a8e",
+              "tertiary-fixed": "#ffdbd0",
+              "on-surface-variant": "#454652",
+              "on-primary-fixed-variant": "#343d96",
+              "surface-container-lowest": "#ffffff",
+              "primary": "#000666",
+              "inverse-primary": "#bdc2ff",
+              "on-tertiary-container": "#e17c5a",
+              "error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-pill {
+            box-shadow: 0 4px 12px -2px rgba(26, 35, 126, 0.2);
+        }
+        .zebra-table tr:nth-child(even) {
+            background-color: #f2f4f8;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface flex min-h-screen">
+<!-- Sidebar Navigation (SideNavBar) -->
+<aside class="flex flex-col h-full py-8 fixed left-0 top-0 overflow-y-auto h-screen w-72 rounded-r-none border-none bg-[#f2f4f8] dark:bg-slate-950 z-50 transition-all">
+<div class="px-8 mb-10">
+<h1 class="font-['Manrope'] font-bold text-[#1A237E] dark:text-indigo-300 text-2xl tracking-tight">Akademi Modern</h1>
+<p class="text-slate-500 text-xs font-semibold uppercase tracking-widest mt-1">Yönetici Paneli</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-slate-600 dark:text-slate-400 mx-4 py-3 px-6 hover:translate-x-1 transition-transform flex items-center gap-3 font-['Inter'] text-[0.875rem] font-medium group" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span>Panel</span>
+</a>
+<a class="bg-[#dee0ff] dark:bg-indigo-900/40 text-[#1A237E] dark:text-indigo-100 rounded-full mx-4 py-3 px-6 font-semibold flex items-center gap-3 active-pill" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">how_to_reg</span>
+<span>Yoklama Takibi</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 mx-4 py-3 px-6 hover:translate-x-1 transition-transform flex items-center gap-3 font-['Inter'] text-[0.875rem] font-medium group" href="#">
+<span class="material-symbols-outlined text-xl">group</span>
+<span>Öğrenci Listesi</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 mx-4 py-3 px-6 hover:translate-x-1 transition-transform flex items-center gap-3 font-['Inter'] text-[0.875rem] font-medium group" href="#">
+<span class="material-symbols-outlined text-xl">assignment</span>
+<span>Sınavlar</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 mx-4 py-3 px-6 hover:translate-x-1 transition-transform flex items-center gap-3 font-['Inter'] text-[0.875rem] font-medium group" href="#">
+<span class="material-symbols-outlined text-xl">calendar_today</span>
+<span>Ders Programı</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 mx-4 py-3 px-6 hover:translate-x-1 transition-transform flex items-center gap-3 font-['Inter'] text-[0.875rem] font-medium group" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span>Ayarlar</span>
+</a>
+</nav>
+<div class="px-8 mt-auto">
+<button class="w-full bg-gradient-to-br from-[#000666] to-[#1a237e] text-white py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-lg shadow-indigo-900/20">
+<span class="material-symbols-outlined">add</span>
+<span>Yeni Kayıt Oluştur</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-72 flex-1 min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-10 w-full sticky top-0 z-40 w-full h-16 no-border bg-[#f7f9fd] to-[#f2f4f8] transition-all">
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-high p-2 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">search</span>
+</div>
+<input class="bg-transparent border-none focus:ring-0 text-sm font-medium w-64 text-on-surface-variant" placeholder="Öğrenci veya Veli Ara..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-200/50 rounded-full transition-colors relative">
+<span class="material-symbols-outlined text-slate-600">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<button class="p-2 hover:bg-slate-200/50 rounded-full transition-colors">
+<span class="material-symbols-outlined text-slate-600">help_outline</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant/30">
+<div class="text-right">
+<p class="text-sm font-bold text-primary">Ahmet Yılmaz</p>
+<p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Yönetici</p>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-primary-fixed flex items-center justify-center">
+<img alt="Yönetici Profili" class="w-full h-full object-cover" data-alt="Professional male administrator portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtrDovM57Wmbil9OLCHK84ny76nJ-zZeAyyLEICcli628Bv4UDEnuEJDf0DsQIIu6BmJsFSyb7uH0G3QeUZlcysR3Mi75a9M12SREaJKaz6HjWxmhwijImL5yB_QnWsPzyh2W-FGqXGN2Dc5_TiaZZOKHsPGjswaDYOhaJ8jQ_G51KrQsq5-hiX4zYgXxypgJSe9KbqruYIZn3Ct1iA-rSJMFwfnunavmbq0i4bU2tho_hcVnuCmnlIh__pIwVjQtETomRy_hknGA"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-10 space-y-8">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div class="space-y-1">
+<h2 class="text-display-md font-headline font-extrabold text-primary tracking-tight text-4xl">Yoklama Takibi</h2>
+<p class="text-on-surface-variant font-medium">Sınıf bazlı günlük devamsızlık girişlerini ve öğrenci durumlarını yönetin.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2.5 bg-surface-container-high text-primary font-semibold rounded-xl text-sm transition-all hover:bg-surface-container-highest">
+                        İptal
+                    </button>
+<button class="px-8 py-2.5 bg-gradient-to-br from-primary to-primary-container text-white font-semibold rounded-xl text-sm shadow-md">
+                        Değişiklikleri Kaydet
+                    </button>
+</div>
+</div>
+<!-- Filters Area -->
+<section class="grid grid-cols-4 gap-4 bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10 items-end">
+<div class="space-y-2">
+<label class="block text-label-md font-semibold text-on-surface-variant uppercase tracking-widest text-[10px]">Tarih Seçimi</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-sm">calendar_month</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-surface-container-low border-none rounded-lg text-sm font-medium focus:ring-2 focus:ring-surface-tint/40" type="date" value="2024-05-24"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-label-md font-semibold text-on-surface-variant uppercase tracking-widest text-[10px]">Sınıf Seçimi</label>
+<select class="w-full px-4 py-2.5 bg-surface-container-low border-none rounded-lg text-sm font-medium focus:ring-2 focus:ring-surface-tint/40">
+<option>12-A Sayısal</option>
+<option>12-B Sayısal</option>
+<option>11-C Eşit Ağırlık</option>
+<option>Mezun-A Sayısal</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="block text-label-md font-semibold text-on-surface-variant uppercase tracking-widest text-[10px]">Ders Seçimi</label>
+<select class="w-full px-4 py-2.5 bg-surface-container-low border-none rounded-lg text-sm font-medium focus:ring-2 focus:ring-surface-tint/40">
+<option>Matematik (AYT)</option>
+<option>Fizik</option>
+<option>Kimya</option>
+<option>Biyoloji</option>
+</select>
+</div>
+<div class="flex items-center justify-end">
+<button class="flex items-center gap-2 text-primary font-bold text-sm hover:underline">
+<span class="material-symbols-outlined">filter_list</span>
+<span>Gelişmiş Filtreler</span>
+</button>
+</div>
+</section>
+<!-- Summary Cards -->
+<section class="grid grid-cols-3 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border-l-4 border-green-500 flex items-center justify-between">
+<div>
+<p class="text-label-md font-semibold text-on-surface-variant uppercase tracking-wider">Katılan Öğrenci</p>
+<h3 class="text-3xl font-headline font-extrabold text-primary mt-1">24</h3>
+</div>
+<div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-green-600">check_circle</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border-l-4 border-error flex items-center justify-between">
+<div>
+<p class="text-label-md font-semibold text-on-surface-variant uppercase tracking-wider">Katılmayan Öğrenci</p>
+<h3 class="text-3xl font-headline font-extrabold text-primary mt-1">2</h3>
+</div>
+<div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-error">cancel</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border-l-4 border-amber-500 flex items-center justify-between">
+<div>
+<p class="text-label-md font-semibold text-on-surface-variant uppercase tracking-wider">İzinli Öğrenci</p>
+<h3 class="text-3xl font-headline font-extrabold text-primary mt-1">1</h3>
+</div>
+<div class="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-amber-600">event_busy</span>
+</div>
+</div>
+</section>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-12 gap-8 items-start">
+<!-- Table Section -->
+<div class="col-span-8 bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm">
+<div class="p-6 flex justify-between items-center border-b border-outline-variant/10">
+<h4 class="text-title-md font-bold text-primary">Sınıf Listesi</h4>
+<button class="text-sm font-bold text-primary flex items-center gap-2 bg-secondary-fixed/30 px-4 py-2 rounded-lg hover:bg-secondary-fixed/50 transition-colors">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">done_all</span>
+                            Tümünü Katıldı İşaretle
+                        </button>
+</div>
+<table class="w-full zebra-table">
+<thead class="bg-surface-container-low text-left">
+<tr>
+<th class="px-6 py-4 text-label-md font-bold text-on-surface-variant uppercase tracking-widest text-[10px]">Öğrenci</th>
+<th class="px-4 py-4 text-label-md font-bold text-on-surface-variant uppercase tracking-widest text-[10px]">No</th>
+<th class="px-4 py-4 text-label-md font-bold text-on-surface-variant uppercase tracking-widest text-[10px]">Alan</th>
+<th class="px-4 py-4 text-label-md font-bold text-on-surface-variant uppercase tracking-widest text-[10px]">Son Durum</th>
+<th class="px-6 py-4 text-right text-label-md font-bold text-on-surface-variant uppercase tracking-widest text-[10px]">Derse Katıldı</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="group cursor-pointer hover:bg-indigo-50/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-slate-200 overflow-hidden">
+<img alt="Student 1" class="w-full h-full object-cover" data-alt="Student male headshot portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxCIZi5vu-4lHGs29meMRbAuQS-SQeyllt5viC784wMqpIaIAnCe6xE7Ky6HbWhsb4kppO8R3YRhw4QJ3zuy5rMFq1Vp3xqVbv5JM0U_M2DA50rhgqNs4CyjHOyk9gsAPPFWagm_QoRiYPdloOaD8YQZK-QO14TfN0RDX9-3fEpC7NNarJ845bM7DObrOzYuYQx2nHXtG8lupzG2oPe41KqBtkijCzwITJZhZq-47H4o9S6Ffe4-nA8DrQeRGPZtMQw6acZsv1SUU"/>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">Mert Demir</p>
+<p class="text-[11px] text-on-surface-variant font-medium"> mert.demir@akademi.com</p>
+</div>
+</div>
+</td>
+<td class="px-4 py-4 text-sm font-semibold text-on-surface-variant">1042</td>
+<td class="px-4 py-4">
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Sayısal</span>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-1 text-green-600 font-bold text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
+                                        KATILDI
+                                    </div>
+</td>
+<td class="px-6 py-4 text-right">
+<input checked="" class="w-5 h-5 rounded text-primary focus:ring-primary border-outline-variant/40" type="checkbox"/>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group cursor-pointer hover:bg-indigo-50/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-slate-200 overflow-hidden">
+<img alt="Student 2" class="w-full h-full object-cover" data-alt="Student female headshot portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHgLwwb7UMKu9aVwBitHCeyB9tQzcvwfGmwr7AbXEDhXfESqGnklBf89ZBtuIz7TWIZ6sZ1Abs0YsoH70mbJxeWZXMlalc0Yn-c-v0IJTpjzF_WDTzZodGBtGWnAlzT0At960Oop2zsgvZzPVQ9fjJEVpDNsJSF-HEtbHgVawH-vLALJL0_eJZe_SRxBNM1huxfL_vsUxbeZZd0q3JBEPXka3acujZjQsNzeJ4lMNoQaQXkq_jkYD2Olr0m1YXlvtrHV3lkuQOimo"/>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">Selin Aktaş</p>
+<p class="text-[11px] text-on-surface-variant font-medium">selin.aktas@akademi.com</p>
+</div>
+</div>
+</td>
+<td class="px-4 py-4 text-sm font-semibold text-on-surface-variant">1058</td>
+<td class="px-4 py-4">
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Sayısal</span>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-1 text-error font-bold text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                        KATILMADI
+                                    </div>
+</td>
+<td class="px-6 py-4 text-right">
+<input class="w-5 h-5 rounded text-primary focus:ring-primary border-outline-variant/40" type="checkbox"/>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group cursor-pointer hover:bg-indigo-50/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-slate-200 overflow-hidden">
+<img alt="Student 3" class="w-full h-full object-cover" data-alt="Smiling student female portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDStQ-hEUxh1OmgeeHKeBLo-JMUGauXQqxn90aSxutUnhn8no56SHEM1s3SdhuZqonhKAj2UAYDSSNToWmHSV9VCuSRm2olNKrgosCG5y-deYPyBkT_cN99GMYGLdDjfIJMPL0jZL9WUAi3BZ71gg9mAb--F5Jvstu8utpQGqDjPdGQCSqovSxQFRnmhbXbqbhKj_njLsLQWwCBCU4TwPaQa_4Wo1nE-1flnrbEQ9GmkZw1wyfmbIz3TClYl6xq4wb544B-yyXt8ag"/>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">Elif Yılmaz</p>
+<p class="text-[11px] text-on-surface-variant font-medium">elif.yilmaz@akademi.com</p>
+</div>
+</div>
+</td>
+<td class="px-4 py-4 text-sm font-semibold text-on-surface-variant">1102</td>
+<td class="px-4 py-4">
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Sayısal</span>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-1 text-amber-600 font-bold text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                                        İZİNLİ
+                                    </div>
+</td>
+<td class="px-6 py-4 text-right">
+<input class="w-5 h-5 rounded text-primary focus:ring-primary border-outline-variant/40" type="checkbox"/>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group cursor-pointer hover:bg-indigo-50/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-slate-200 overflow-hidden">
+<img alt="Student 4" class="w-full h-full object-cover" data-alt="Student male focused portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArmjohaUbG6496JypvEITdVp8x9E_BNCLNBdOg2T-pDBb9HFV4TI9Nj8WN8lq9zeQ3LZSTWLGnhoHs8EAZR_3eRgXkcr8EuY3onNrAVOgjOtCcpOO7_Ho2oUaJNQV4PR_MUkRvLkNEgD-J-t0d2ybRH4NEFSC7_dITOPUoo5L1eFL8CWI2qEGIo_mhwWD86-WPnN_6J6li7ndyEH2chaER-PCM3Ves6IYepXNUxfDOGPgc_BvwPyde23rxiaqHdVoaZH2-ooLieSY"/>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">Burak Özcan</p>
+<p class="text-[11px] text-on-surface-variant font-medium">burak.ozcan@akademi.com</p>
+</div>
+</div>
+</td>
+<td class="px-4 py-4 text-sm font-semibold text-on-surface-variant">1088</td>
+<td class="px-4 py-4">
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Sayısal</span>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-1 text-green-600 font-bold text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
+                                        KATILDI
+                                    </div>
+</td>
+<td class="px-6 py-4 text-right">
+<input checked="" class="w-5 h-5 rounded text-primary focus:ring-primary border-outline-variant/40" type="checkbox"/>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-6 text-center border-t border-outline-variant/10">
+<p class="text-xs text-on-surface-variant font-medium">Toplam 27 öğrenci listeleniyor. Mevcut tarih için yoklama girişi açık.</p>
+</div>
+</div>
+<!-- Right Drawer (Fixed-like panel) -->
+<aside class="col-span-4 bg-surface-container-low rounded-3xl p-8 border border-outline-variant/20 shadow-xl space-y-8 sticky top-24">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-2xl bg-white p-1 border border-outline-variant/20 shadow-sm">
+<img alt="Student" class="w-full h-full object-cover rounded-xl" data-alt="Selin Aktas portrait in sidebar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKK4Rwu_R4mCu5UbZGt8bzEkb4ISkbL8072jRtcuoNL0bd-JvZzy5xvKhhOik1MZ2oHjCe2y840RMRdp91jNDzH4TFujXwlK6yHXd6Fk1QT6yfQbCg4pPmv_9IiuN8qhokqTZbStxbwK6rXcXv5fJW3jJEW0ijEhgL1_myHoDWs-axgbvIPjCgsh_OPC-bAAduqohQgZGC2c_pDZ810-gQGIIwXg5MZGE2UwT7JAoFAJczgbxaONHmz_P0s0O6Bi3HHsWEOxrsTcE"/>
+</div>
+<div>
+<h5 class="text-headline-sm font-headline font-bold text-primary text-xl leading-tight">Selin Aktaş</h5>
+<p class="text-label-md font-semibold text-on-surface-variant uppercase tracking-widest text-[10px] mt-1">Öğrenci No: 1058</p>
+</div>
+</div>
+<button class="p-2 hover:bg-surface-container-high rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant">close</span>
+</button>
+</div>
+<!-- Stats in Drawer -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-lowest p-4 rounded-2xl">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Toplam Devamsızlık</p>
+<p class="text-xl font-bold text-error mt-1">4.5 Gün</p>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-2xl">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Sınıf Sıralaması</p>
+<p class="text-xl font-bold text-primary mt-1">3 / 24</p>
+</div>
+</div>
+<!-- Exam Notes -->
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<h6 class="text-sm font-bold text-primary">Son Sınav Notları</h6>
+<a class="text-[10px] font-bold text-on-primary-container hover:underline" href="#">TÜMÜNÜ GÖR</a>
+</div>
+<div class="space-y-3">
+<div class="bg-white/60 p-3 rounded-xl flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-xs font-semibold text-on-surface">TYT Deneme - 8</span>
+</div>
+<span class="text-xs font-bold text-primary">412.500 Puan</span>
+</div>
+<div class="bg-white/60 p-3 rounded-xl flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-xs font-semibold text-on-surface">AYT Matematik</span>
+</div>
+<span class="text-xs font-bold text-primary">38 Net</span>
+</div>
+<div class="bg-white/60 p-3 rounded-xl flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-xs font-semibold text-on-surface">Fizik Tarama</span>
+</div>
+<span class="text-xs font-bold text-primary">%92 Başarı</span>
+</div>
+</div>
+</div>
+<!-- Action Link -->
+<div class="pt-4 border-t border-outline-variant/20">
+<button class="w-full py-3 bg-secondary-fixed text-on-secondary-fixed-variant font-bold text-sm rounded-xl flex items-center justify-center gap-2 hover:brightness-95">
+<span class="material-symbols-outlined text-sm">contact_page</span>
+                            Veli ile İletişime Geç
+                        </button>
+</div>
+</aside>
+</div>
+</div>
+<!-- Sticky Mobile Bottom Bar (Placeholder for Responsiveness) -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white h-16 flex justify-around items-center border-t border-outline-variant/20 z-50">
+<span class="material-symbols-outlined text-primary">home</span>
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">how_to_reg</span>
+<span class="material-symbols-outlined text-on-surface-variant">group</span>
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</main>
+</body></html>

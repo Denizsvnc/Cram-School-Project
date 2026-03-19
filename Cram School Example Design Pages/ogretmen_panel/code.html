@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Academic Curator - Öğretmen Paneli</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed-variant": "#7b2e12",
+              "error": "#ba1a1a",
+              "tertiary": "#380b00",
+              "on-secondary-fixed": "#000e5e",
+              "on-secondary-container": "#182a8e",
+              "tertiary-fixed": "#ffdbd0",
+              "on-surface-variant": "#454652",
+              "on-primary-fixed-variant": "#343d96",
+              "inverse-primary": "#bdc2ff",
+              "primary": "#000666",
+              "surface-container-lowest": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-tertiary-container": "#e17c5a",
+              "surface-variant": "#e0e2e6",
+              "secondary-container": "#8999ff",
+              "tertiary-container": "#5c1800",
+              "primary-container": "#1a237e",
+              "on-primary-fixed": "#000767",
+              "tertiary-fixed-dim": "#ffb59d",
+              "on-secondary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-container": "#eceef2",
+              "surface-tint": "#4c56af",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#e0e2e6",
+              "outline-variant": "#c6c5d4",
+              "surface-dim": "#d8dade",
+              "outline": "#767683",
+              "on-secondary-fixed-variant": "#2c3c9e",
+              "surface-bright": "#f7f9fd",
+              "on-tertiary": "#ffffff",
+              "on-tertiary-fixed": "#390c00",
+              "background": "#f7f9fd",
+              "secondary-fixed-dim": "#bbc3ff",
+              "secondary": "#4555b7",
+              "inverse-on-surface": "#eff1f5",
+              "inverse-surface": "#2d3134",
+              "surface": "#f7f9fd",
+              "on-background": "#191c1f",
+              "surface-container-high": "#e6e8ec",
+              "secondary-fixed": "#dee0ff",
+              "primary-fixed-dim": "#bdc2ff",
+              "primary-fixed": "#e0e0ff",
+              "on-surface": "#191c1f",
+              "on-primary-container": "#8690ee",
+              "on-primary": "#ffffff",
+              "surface-container-low": "#f2f4f8"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f7f9fd;
+      }
+      h1, h2, h3 {
+        font-family: 'Manrope', sans-serif;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #c6c5d4;
+        border-radius: 10px;
+      }
+    </style>
+</head>
+<body class="text-on-surface antialiased overflow-hidden">
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar Component -->
+<aside class="hidden md:flex flex-col h-screen py-8 gap-y-2 bg-[#f2f4f8] dark:bg-slate-950 w-72 flex-shrink-0">
+<div class="px-8 mb-10 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+</div>
+<div>
+<h1 class="font-['Manrope'] text-lg font-extrabold text-[#000666]">Akademik Küratör</h1>
+<p class="text-[10px] font-['Inter'] font-medium uppercase tracking-wider text-[#191c1f] opacity-60">Yönetim Paneli</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center text-[#191c1f] opacity-70 mx-4 px-6 py-3 hover:bg-[#e6e8ec] rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-sm font-medium uppercase tracking-wider">Panel</span>
+</a>
+<a class="flex items-center bg-[#dee0ff] text-[#000666] rounded-full mx-4 px-6 py-3 font-bold group" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="event_note" style="font-variation-settings: 'FILL' 1;">event_note</span>
+<span class="font-['Inter'] text-sm font-medium uppercase tracking-wider">Programım</span>
+</a>
+<a class="flex items-center text-[#191c1f] opacity-70 mx-4 px-6 py-3 hover:bg-[#e6e8ec] rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform" data-icon="edit_note">edit_note</span>
+<span class="font-['Inter'] text-sm font-medium uppercase tracking-wider">Not Girişi</span>
+</a>
+<a class="flex items-center text-[#191c1f] opacity-70 mx-4 px-6 py-3 hover:bg-[#e6e8ec] rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform" data-icon="class">class</span>
+<span class="font-['Inter'] text-sm font-medium uppercase tracking-wider">Sınıflar</span>
+</a>
+<a class="flex items-center text-[#191c1f] opacity-70 mx-4 px-6 py-3 hover:bg-[#e6e8ec] rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform" data-icon="settings">settings</span>
+<span class="font-['Inter'] text-sm font-medium uppercase tracking-wider">Ayarlar</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-4 px-6 rounded-2xl font-semibold shadow-lg hover:shadow-primary/20 transition-all flex items-center justify-center gap-2 group">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span>Yeni Kayıt Oluştur</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-surface overflow-hidden">
+<!-- TopNavBar Component -->
+<header class="flex justify-between items-center w-full px-10 py-4 h-20 bg-[#f7f9fd] dark:bg-slate-900">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full pl-12 pr-4 py-2.5 bg-surface-container-lowest border-none rounded-xl focus:ring-2 focus:ring-surface-tint/40 text-sm transition-all outline-none placeholder:text-outline-variant" placeholder="Öğrenci veya Veli Ara..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6 ml-10">
+<button class="relative p-2 text-[#191c1f]/60 hover:bg-[#e6e8ec] transition-colors rounded-full Active: opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-[#191c1f]/60 hover:bg-[#e6e8ec] transition-colors rounded-full Active: opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/30"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold text-[#191c1f]">Ayşe Özdemir</p>
+<p class="text-[10px] font-semibold text-primary uppercase tracking-wider">Öğretmen</p>
+</div>
+<img alt="Kullanıcı Profili" class="w-10 h-10 rounded-full border-2 border-surface-container-high object-cover" data-alt="Portrait of a professional teacher smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbACSstlPRP_JQ9MkGIKb98RCMbwaH7Gt6fUJcUrHcRTnTuX0LA9og8iD4E5j3nc_4fh432FGqchFdNW_r1GAmCtpNUlf-nvO3Tvc_UNxwhcLkP54OeFxrzI50pP1-DNb57orqU21FNkY43_rrnsITr43StsHIXje69oOZb1lmyzhuH7RyEXiPbSRm89iI5ellTPbBc-zFIjhWJ2dBfi9XeO0KjMrYmLB9UcpT8C8s39K7wnU6cPzaCQz8HowWd98QnNbQBzWz9VY"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="flex-1 overflow-y-auto p-10 custom-scrollbar">
+<div class="mb-10">
+<h2 class="text-3xl font-bold text-on-surface tracking-tight font-headline">Hoş Geldiniz, Ayşe Hanım</h2>
+<p class="text-on-surface-variant mt-2 font-medium">Bugün 4 dersiniz ve 2 görüşmeniz bulunuyor.</p>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<!-- Central Schedule View -->
+<div class="col-span-12 lg:col-span-8">
+<div class="bg-surface-container-lowest rounded-2xl p-8 shadow-sm">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-xl font-bold font-headline text-primary">Haftalık Ders Programım</h3>
+<div class="flex items-center gap-2 bg-surface-container-low p-1 rounded-xl">
+<button class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider bg-surface-container-lowest text-primary shadow-sm">Haftalık</button>
+<button class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high transition-all">Günlük</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full border-collapse">
+<thead>
+<tr>
+<th class="p-4 text-left text-[10px] font-bold uppercase tracking-widest text-outline">Saat</th>
+<th class="p-4 text-left text-[10px] font-bold uppercase tracking-widest text-outline">Pazartesi</th>
+<th class="p-4 text-left text-[10px] font-bold uppercase tracking-widest text-outline">Salı</th>
+<th class="p-4 text-left text-[10px] font-bold uppercase tracking-widest text-outline">Çarşamba</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr>
+<td class="p-4 text-sm font-semibold text-outline py-8">09:00 - 10:30</td>
+<td class="p-2">
+<div class="bg-primary-fixed text-on-primary-fixed-variant p-4 rounded-xl border-l-4 border-primary">
+<p class="text-xs font-bold uppercase">Matematik-1</p>
+<p class="text-[11px] opacity-80">12-A Sınıfı</p>
+</div>
+</td>
+<td class="p-2"></td>
+<td class="p-2">
+<div class="bg-secondary-fixed text-on-secondary-fixed-variant p-4 rounded-xl border-l-4 border-secondary">
+<p class="text-xs font-bold uppercase">Geometri</p>
+<p class="text-[11px] opacity-80">11-B Sınıfı</p>
+</div>
+</td>
+</tr>
+<tr class="bg-surface-container-low/30">
+<td class="p-4 text-sm font-semibold text-outline py-8">10:45 - 12:15</td>
+<td class="p-2"></td>
+<td class="p-2">
+<div class="bg-primary-fixed text-on-primary-fixed-variant p-4 rounded-xl border-l-4 border-primary">
+<p class="text-xs font-bold uppercase">Matematik-2</p>
+<p class="text-[11px] opacity-80">12-C Sınıfı</p>
+</div>
+</td>
+<td class="p-2">
+<div class="bg-tertiary-fixed text-on-tertiary-fixed-variant p-4 rounded-xl border-l-4 border-on-tertiary-container">
+<p class="text-xs font-bold uppercase">Etüt Seansı</p>
+<p class="text-[11px] opacity-80">VIP Oda 2</p>
+</div>
+</td>
+</tr>
+<tr>
+<td class="p-4 text-sm font-semibold text-outline py-8">13:30 - 15:00</td>
+<td class="p-2">
+<div class="bg-secondary-fixed text-on-secondary-fixed-variant p-4 rounded-xl border-l-4 border-secondary">
+<p class="text-xs font-bold uppercase">Geometri</p>
+<p class="text-[11px] opacity-80">10-A Sınıfı</p>
+</div>
+</td>
+<td class="p-2"></td>
+<td class="p-2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Side Section: Announcements & Quick Stats -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<!-- Announcements -->
+<div class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/10">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold font-headline text-on-surface">Duyurular</h3>
+<span class="material-symbols-outlined text-primary" data-icon="campaign">campaign</span>
+</div>
+<div class="space-y-6">
+<div class="group cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold text-on-tertiary-container bg-tertiary-fixed px-2 py-0.5 rounded-md uppercase tracking-wide">Önemli</span>
+<span class="text-[10px] text-outline font-medium">Bugün</span>
+</div>
+<h4 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Veli Toplantısı Hatırlatması</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Cuma günü saat 17:00'de konferans salonunda 12. sınıf veli toplantısı yapılacaktır.</p>
+</div>
+<div class="h-[1px] bg-outline-variant/20"></div>
+<div class="group cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold text-on-primary-fixed-variant bg-primary-fixed px-2 py-0.5 rounded-md uppercase tracking-wide">Akademik</span>
+<span class="text-[10px] text-outline font-medium">Dün</span>
+</div>
+<h4 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Yeni Müfredat Güncellemesi</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">TYT-AYT matematik konularındaki güncellemeleri panelden kontrol edebilirsiniz.</p>
+</div>
+<div class="h-[1px] bg-outline-variant/20"></div>
+<div class="group cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold text-outline bg-surface-container-highest px-2 py-0.5 rounded-md uppercase tracking-wide">Genel</span>
+<span class="text-[10px] text-outline font-medium">3 Günü Önce</span>
+</div>
+<h4 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Kantin Saatleri Değişikliği</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Öğle arası saatleri 12:15 - 13:15 olarak güncellenmiştir.</p>
+</div>
+</div>
+<button class="w-full mt-8 py-3 text-xs font-bold text-primary uppercase tracking-widest hover:bg-surface-container-high rounded-xl transition-all">Tümünü Gör</button>
+</div>
+<!-- Mini Stats Bento -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-primary-container p-6 rounded-2xl text-white">
+<span class="material-symbols-outlined mb-4 opacity-70" data-icon="groups">groups</span>
+<p class="text-2xl font-bold">142</p>
+<p class="text-[10px] font-medium uppercase tracking-wider opacity-70">Toplam Öğrenci</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10">
+<span class="material-symbols-outlined mb-4 text-on-tertiary-container" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<p class="text-2xl font-bold text-on-surface">94%</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-outline">Başarı Oranı</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Right-Side Floating Actions (Optional) -->
+<div class="fixed bottom-8 right-8 flex flex-col gap-4">
+<button class="w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+</button>
+</div>
+</body></html>
