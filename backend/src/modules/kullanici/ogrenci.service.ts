@@ -1,3 +1,4 @@
+import { Kullanici } from '../../../generated/prisma/browser';
 import { getPrismaClient } from '../../core/config/prisma';
 
 import { NotFoundError, UnauthorizedError } from '../errors/customErrors';
@@ -8,7 +9,8 @@ const prisma = getPrismaClient();
 export const ogrencileriGetir = async () => {
     const ogrenciler = await prisma.kullanici.findMany({
         where: { 
-            rol: "OGRENCI" 
+            rol: "OGRENCI",
+            aktifMi: true
         },
         select: {
             id: true,
@@ -76,7 +78,8 @@ export const ogrenciGetirById = async (ogrenciNo: number) => {
     const ogrenci = await prisma.kullanici.findFirst({
         where: {
             ogrenciNo: ogrenciNo,
-            rol: "OGRENCI"
+            rol: "OGRENCI",
+            aktifMi: true
 
         },
                 select: {
@@ -138,3 +141,44 @@ export const ogrenciGetirById = async (ogrenciNo: number) => {
     return ogrenci;
 }
 
+export const ogrenciSil = async (ogrenciNo: number)=>{
+    const ogrenci = await prisma.kullanici.findFirst({
+        where: {
+            ogrenciNo: ogrenciNo,
+            rol: "OGRENCI"
+        },
+    });
+
+    if(!ogrenci) {
+        throw new NotFoundError(`${ogrenciNo} No'lu öğrenci bulunamadı.`);
+    }
+    return await prisma.kullanici.update({
+        where:{
+            ogrenciNo
+        },
+        data:{
+            rol: "ESKI_OGRENCI",
+            aktifMi: false
+        }
+            
+    })
+}
+
+export const ogrenciGuncelle = async (ogrenciNo: number, guncelVeriler: Partial<Omit<Kullanici, 'id' | 'ogrenciNo' | 'rol' | 'createdAt'>>) => {
+    const ogrenci = await prisma.kullanici.findFirst({
+        where: {
+            ogrenciNo: ogrenciNo,
+            rol: "OGRENCI",
+            aktifMi: true
+        },
+    });
+
+    if(!ogrenci) {
+        throw new NotFoundError(`${ogrenciNo} No'lu öğrenci bulunamadı.`);
+    }
+
+    return await prisma.kullanici.update({
+        where: { ogrenciNo: ogrenciNo },
+        data: guncelVeriler
+    });
+};

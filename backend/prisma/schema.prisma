@@ -15,6 +15,10 @@ enum Roller {
   OGRENCI
   VELI
   PERSONEL
+  ESKI_OGRENCI
+  ESKI_PERSONEL
+  ESKI_VELI
+
 }
 
 
@@ -57,6 +61,8 @@ model Kullanici {
 
   sessions            Session[]
   
+  aktifMi Boolean @default(true)
+
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }

@@ -33,25 +33,89 @@ export const ogrenciGetirById = async (req: Request, res: Response, next: NextFu
     }
 }
 
-export const personelleriGetir = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const ogrenciSil = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try{
-        const { rol } = req.query;
-        const filtreRol = rol ? (rol as Roller) : undefined;
-        const personeller = await personelService.personelleriGetir();
+        const ogrenciNoRaw = req.params.ogrenciNo as string; 
+        const ogrenciNo = parseInt(ogrenciNoRaw, 10);
+        if (isNaN(ogrenciNo)) {
+            res.status(400).json({ message: "Geçersiz öğrenci numarası." });
+            return;
+        }
+        await ogrenciService.ogrenciSil(ogrenciNo);
         res.status(200).json({
-            message: rol ? `${rol} listesi getirildi.` : "Tüm personel listesi getirildi.",
-            personeller : personeller,
-            toplamOgretmen: personeller.length
-        });
-    } catch (err) { next(err); }
+            message : `${ogrenciNo} No'lu öğrenci başarıyla silindi.`
+        }); 
+    } catch (err) { next(err);}
+}
+export const ogrenciGuncelle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try{
+        const ogrenciNoRaw = req.params.ogrenciNo as string; 
+        const ogrenciNo = parseInt(ogrenciNoRaw, 10);
+        if (isNaN(ogrenciNo)) {
+            res.status(400).json({ message: "Geçersiz öğrenci numarası." });
+            return;
+        }
+        const guncelVeriler = req.body;
+        const guncellenenOgrenci = await ogrenciService.ogrenciGuncelle(ogrenciNo, guncelVeriler);
+        res.status(200).json({
+            message : `${ogrenciNo} No'lu öğrenci başarıyla güncellendi.`,
+            ogrenci : guncellenenOgrenci
+        });     
+    } catch (err) { next(err);}
+}
+export const personelSil = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try{
+        const personelNoRaw = req.params.personelNo as string; 
+        const personelNo = parseInt(personelNoRaw, 10);
+        if (isNaN(personelNo)) {
+            res.status(400).json({ message: "Geçersiz personel numarası." });
+            return;
+        }
+        await personelService.personelSil(personelNo);
+        res.status(200).json({
+            message : `${personelNo} No'lu personel başarıyla silindi.`
+        }); 
+    } catch (err) { next(err);}
 }
 
+export const personelGuncelle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try{
+        const personelNoRaw = req.params.personelNo as string; 
+        const personelNo = parseInt(personelNoRaw, 10);
+        if (isNaN(personelNo)) {
+            res.status(400).json({ message: "Geçersiz personel numarası." });
+            return;
+        }
+        const guncelVeriler = req.body;
+        const guncellenenPersonel = await personelService.personelGuncelle(personelNo, guncelVeriler);
+        res.status(200).json({
+            message : `${personelNo} No'lu personel başarıyla güncellendi.`,
+            personel : guncellenenPersonel
+        });     
+    } catch (err) { next(err);}
+}
+
+export const personelleriGetir = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const { rol } = req.query;      
+        const filtreRol = rol ? (rol as Roller) : undefined;
+        const personeller = await personelService.personelleriGetir(filtreRol);
+
+        res.status(200).json({
+            message: rol ? `${rol} listesi başarıyla getirildi.` : "Tüm personel listesi başarıyla getirildi.",
+            personeller: personeller,
+            count: personeller.length 
+        });
+    } catch (err) { 
+        next(err); 
+    }
+}
 export const personelGetirById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try{
         const personelNoRaw = req.params.personelNo as string; 
         const personelNo = parseInt(personelNoRaw, 10);
         if (isNaN(personelNo)) {
-            res.status(400).json({ message: "Geçersiz öğrenci numarası." });
+            res.status(400).json({ message: "Geçersiz Personel numarası." });
             return;
         }
         const personel = await personelService.personelGetirById(personelNo);

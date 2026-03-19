@@ -3,6 +3,7 @@ import { getPrismaClient } from '../../core/config/prisma';
 import { NotFoundError, UnauthorizedError } from '../errors/customErrors';
 
 import { Roller } from '../../../generated/prisma/enums';
+import { Kullanici } from '../../../generated/prisma/browser';
 
 const prisma = getPrismaClient();
 
@@ -10,7 +11,8 @@ const prisma = getPrismaClient();
 export const personelleriGetir = async (filtreRol?: Roller) => {
     const personeller = await prisma.kullanici.findMany({
         where: { 
-            rol: filtreRol ? filtreRol : { in: ['MUDUR', 'OGRETMEN', 'PERSONEL'] }
+            rol: filtreRol ? filtreRol : { in: ['MUDUR', 'OGRETMEN', 'PERSONEL'] },
+            aktifMi: true
         },
         select: {
             id: true,
@@ -55,7 +57,8 @@ export const personelGetirById = async (personelNo: number) => {
             personelNo: personelNo,
             rol: {
                 in: ["MUDUR", "OGRETMEN", "PERSONEL"]
-            }
+            },
+            aktifMi: true
         },
         select: {
             id: true,
@@ -92,4 +95,48 @@ export const personelGetirById = async (personelNo: number) => {
     }
 
     return personel;
+};
+
+export const personelSil = async (personelNo: number)=>{
+    const personel = await prisma.kullanici.findFirst({
+        where: {
+            personelNo: personelNo,
+            rol: {
+                in: ["MUDUR", "OGRETMEN", "PERSONEL"]
+            }
+        },
+    });
+
+    if(!personel) {
+        throw new NotFoundError(`${personelNo} No'lu personel bulunamadı.`);
+    }
+
+    return await prisma.kullanici.update({
+        where: { personelNo: personelNo },
+        data: { 
+            aktifMi: false,
+            rol: "ESKI_PERSONEL"
+        }
+    })
+}
+
+export const personelGuncelle = async (personelNo: number, guncelVeriler: Partial<Omit<Kullanici, 'id' | 'personelNo' | 'rol' | 'createdAt'>>) => {
+    const personel = await prisma.kullanici.findFirst({
+        where: {
+            personelNo: personelNo,
+            rol: {
+                in: ["MUDUR", "OGRETMEN", "PERSONEL"]
+            },
+            aktifMi: true
+        },
+    });
+
+    if(!personel) {
+        throw new NotFoundError(`${personelNo} No'lu öğrenci bulunamadı.`);
+    }
+
+    return await prisma.kullanici.update({
+        where: { personelNo: personelNo },
+        data: guncelVeriler
+    });
 };
