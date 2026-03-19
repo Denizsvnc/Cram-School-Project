@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import * as ogrenciService from './ogrenci.service';
 import * as personelService from './personel.service';
 
-
 import { Roller } from '../../../generated/prisma/enums';
 
 export const ogrencileriGetir = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
