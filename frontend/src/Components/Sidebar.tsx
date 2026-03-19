@@ -2,6 +2,7 @@ import {Link} from 'react-router-dom'
 import {Box, Button} from '@mui/material'
 import { kullaniciRolunuGetir } from '../services/session';
 import { cikisYap, type UserRole } from '../services/authApi';
+import "./sidebar.css"
 
 type MenuItem = {label: string, to: string}
 
@@ -63,7 +64,7 @@ function Sidebar() {
   const menu = role ? menuByRole[role] : [];
   return (
     <>
-    <Box>
+    <Box className="sidebar-container">
 
         <h4>Arac Çubuğu</h4>
 

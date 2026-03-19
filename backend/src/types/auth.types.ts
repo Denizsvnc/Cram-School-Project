@@ -16,7 +16,7 @@ export interface RegisterRequestBody {
   tc_no: string;
   dogum_tarihi: string;
   egitim_durumu: string;
-  odeme_planı?: string;
+  odeme_plani?: string;
   odeme_durumu?: boolean;
   maas?: string;
 }

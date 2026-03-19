@@ -24,7 +24,7 @@ const refreshClient = axios.create({
   let refreshInFlight: Promise<string> | null = null;
 
 const accessTokenYenile = async (): Promise<string> => {
-  const { data } = await refreshClient.post<{ accessToken: string }>('/refresh');
+  const { data } = await refreshClient.post<{ accessToken: string }>('/auth/refresh');
   tokenKaydet(data.accessToken);
   return data.accessToken;
 };
@@ -49,7 +49,7 @@ api.interceptors.response.use(
     const originalRequest = error.config as (typeof error.config & { _retry?: boolean }) | undefined;
     const requestUrl = String(originalRequest?.url ?? '');
 
-    const isAuthEndpoint = requestUrl.includes('/giris') || requestUrl.includes('/refresh') || requestUrl.includes('/logout');
+    const isAuthEndpoint = requestUrl.includes('/auth/giris') || requestUrl.includes('/auth/refresh') || requestUrl.includes('/auth/logout');
 
     if (status === 401 && originalRequest && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true;

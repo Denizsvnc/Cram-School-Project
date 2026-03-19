@@ -19,7 +19,7 @@ export type RegisterPayload = {
   tc_no: string;
   dogum_tarihi: string;
   egitim_durumu: string;
-  odeme_planı?: string;
+  odeme_plani?: string;
   odeme_durumu?: boolean;
   maas?: string;
 };
@@ -54,7 +54,7 @@ const getApiErrorMessage = (error: unknown, fallback: string): string => {
 
 export const girisYap = async (payload: LoginPayload) => {
   try {
-    const { data } = await api.post<LoginResponse>('/giris', payload);
+    const { data } = await api.post<LoginResponse>('/auth/giris', payload);
     tokenKaydet(data.accessToken);
     return data;
   } catch (error: unknown) {
@@ -64,7 +64,7 @@ export const girisYap = async (payload: LoginPayload) => {
 
 export const accessTokenYenile = async (): Promise<string> => {
   try {
-    const { data } = await api.post<RefreshResponse>('/refresh');
+    const { data } = await api.post<RefreshResponse>('/auth/refresh');
     tokenKaydet(data.accessToken);
     return data.accessToken;
   } catch (error: unknown) {
@@ -75,7 +75,7 @@ export const accessTokenYenile = async (): Promise<string> => {
 
 export const cikisYap = async (): Promise<void> => {
   try {
-    await api.post('/logout');
+    await api.post('/auth/logout');
   } finally {
     oturumTemizle();
   }
@@ -83,7 +83,7 @@ export const cikisYap = async (): Promise<void> => {
 
 export const kayitOl = async (payload: RegisterPayload) => {
   try {
-    const { data } = await api.post('/kayit', payload);
+    const { data } = await api.post('/auth/kayit', payload);
     return data;
   } catch (error: unknown) {
     throw new Error(getApiErrorMessage(error, 'Kayit basarisiz.'));

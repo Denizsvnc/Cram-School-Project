@@ -72,14 +72,14 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
   }
 
   if (data.rol === 'OGRENCI') {
-    if (!data.odeme_planı?.trim() || typeof data.odeme_durumu !== 'boolean') {
+    if (!data.odeme_plani?.trim() || typeof data.odeme_durumu !== 'boolean') {
       throw new Error('Ogrenci kaydi icin odeme_plani ve odeme_durumu alanlari zorunludur.');
     }
     
   }
 
 
-  const odemePlani = data.rol === 'OGRENCI' ? data.odeme_planı!.trim() : '';
+  const odemePlani = data.rol === 'OGRENCI' ? data.odeme_plani!.trim() : '';
   const odemeDurumu = data.rol === 'OGRENCI' ? data.odeme_durumu! : false;
   const maas = maasZorunluRoller.has(data.rol) ? data.maas!.trim() : '';
 
@@ -101,7 +101,7 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
       tc_no: data.tc_no,
       dogum_tarihi: new Date(data.dogum_tarihi), 
       egitim_durumu: data.egitim_durumu,
-      odeme_planı: odemePlani,
+      odeme_plani: odemePlani,
       odeme_durumu: odemeDurumu,
       maas,
       ogrenciNo: uretilenNo,

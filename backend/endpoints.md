@@ -4,7 +4,7 @@ Bu dosya, Postman ile test edilebilecek temel backend API endpointlerini özetle
 
 ## Authentication
 
-- **POST /kayit**
+- **POST /auth/kayit**
   - Kullanıcı kaydı
   - Body: { email, password, rol, isim, soy_isim, tel_no, tc_no, dogum_tarihi, egitim_durumu, odeme_planı?, odeme_durumu?, maas? }
   - Response: { mesaj, kullanici }
@@ -22,18 +22,18 @@ Bu dosya, Postman ile test edilebilecek temel backend API endpointlerini özetle
     "odeme_durumu" : true,
     "maas" : "10000"
     }
-- **POST /giris**
+- **POST /auth/giris**
   - Kullanıcı girişi
   - Body: { email, password }
   - Response: { mesaj, kullanici, role, accessToken }
   - Cookie: refreshToken (otomatik set edilir)
 
-- **POST /refresh**
+- **POST /auth/refresh**
   - Access token yenileme
   - Cookie: refreshToken
   - Response: { accessToken }
 
-- **POST /logout**
+- **POST /auth/logout**
   - Oturumu sonlandırma
   - Cookie: refreshToken
   - Response: 204 No Content
@@ -57,9 +57,9 @@ Tüm endpointler JSON formatında yanıt verir. Yetkilendirme gerektiren endpoin
 
 Test için örnek istekler:
 
-- Kayıt: POST /kayit
-- Giriş: POST /giris
-- Token yenileme: POST /refresh
-- Çıkış: POST /logout
+- Kayıt: POST /auth/kayit
+- Giriş: POST /auth/giris
+- Token yenileme: POST /auth/refresh
+- Çıkış: POST /auth/logout
 - Öğrenci listesi: GET /kullanici/ogrenciler
 - Sağlık: GET /saglik
