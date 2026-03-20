@@ -21,6 +21,8 @@ export const personelleriGetir = async (filtreRol?: Roller) => {
             mail: true,
             tel_no: true,
             tc_no: true,
+            personelNo: true,
+            maas: true,
             dogum_tarihi: true,
             egitim_durumu: true,
             odeme_plani: true,

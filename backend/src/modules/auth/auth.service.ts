@@ -16,37 +16,17 @@ const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 const yeniOgrenciNoUret = async (): Promise<number> => {
     const prisma = getPrismaClient();
-    const sonOgrenci = await prisma.kullanici.findFirst({
-        where: { rol: "OGRENCI" },
-        orderBy: { ogrenciNo: 'desc' },
-        select: { ogrenciNo: true }
+    const result = await prisma.kullanici.aggregate({
+        _max: { ogrenciNo: true }
     });
-
-    // Eğer hiç öğrenci yoksa başlangıç numarası 
-    if (!sonOgrenci || !sonOgrenci.ogrenciNo) {
-        return 1; 
-    }
-
-    return sonOgrenci.ogrenciNo + 1;
+    return (result._max.ogrenciNo || 0) + 1;
 };
 const yeniPersonelNoUret = async (): Promise<number> => {
     const prisma = getPrismaClient();
-    const sonPersonel = await prisma.kullanici.findFirst({
-        where: { 
-            rol: { 
-                in: ["MUDUR", "OGRETMEN", "PERSONEL"] 
-            } 
-        },
-        orderBy: { personelNo: 'desc' },
-        select: { personelNo: true }
+    const result = await prisma.kullanici.aggregate({
+        _max: { personelNo: true }
     });
-
-    // Eğer hiç personel yoksa başlangıç numarası 
-    if (!sonPersonel || !sonPersonel.personelNo) {
-        return 1; 
-    }
-
-    return sonPersonel.personelNo + 1;
+    return (result._max.personelNo || 0) + 1;
 };
 export const kullaniciKayit = async (data: RegisterRequestBody): Promise<RegisterServiceResponse> => {
   const prisma = getPrismaClient();
@@ -55,6 +35,10 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
   const personelNoZorunluRoller = new Set(['MUDUR', 'OGRETMEN', 'PERSONEL']);
 
  
+  // TC No ve Telefon numaralarını temizle (boşlukları sil)
+  data.tc_no = data.tc_no?.replace(/\s/g, '').trim();
+  data.tel_no = data.tel_no?.replace(/\s/g, '').trim();
+
   // mail veya tc_no daha önce kayıtlı mı kontrol et
   const existingUser = await prisma.kullanici.findFirst({
     where: {
@@ -63,6 +47,7 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
   });
 
   if (existingUser) {
+    console.warn("Kullanıcı zaten mevcut (Email veya TC):", { mail: data.email, tc: data.tc_no });
     throw new Error('Bu email veya TC Kimlik numarası zaten sistemde kayıtlı.');
   }
   const isOgrenci = data.rol === 'OGRENCI';
@@ -99,15 +84,19 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
       soy_isim: data.soy_isim,
       tel_no: data.tel_no,
       tc_no: data.tc_no,
-      dogum_tarihi: new Date(data.dogum_tarihi), 
+      dogum_tarihi: data.dogum_tarihi ? new Date(data.dogum_tarihi) : new Date(), 
       egitim_durumu: data.egitim_durumu,
       odeme_plani: odemePlani,
       odeme_durumu: odemeDurumu,
       maas,
       ogrenciNo: uretilenNo,
-      personelNo: uretilenPersonelNo
-
-
+      personelNo: uretilenPersonelNo,
+      ...(data.rol === 'OGRENCI' && data.veli_ID ? { veli_ID: data.veli_ID } : {}),
+      ...(data.rol === 'VELI' && data.ogrenci_ids ? {
+        ogrenciler: {
+          connect: data.ogrenci_ids.map(id => ({ id }))
+        }
+      } : {})
     }
   });
 

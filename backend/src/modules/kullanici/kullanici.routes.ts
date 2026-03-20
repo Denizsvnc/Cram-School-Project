@@ -1,20 +1,36 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import * as kullaniciController from './kullanici.controller';
 import { requireAuth } from '../../core/middlewares/auth.middleware';
+import { Roller } from '../../../generated/prisma/enums';
+import { yetkiKontrol } from '../../core/middlewares/role.middleware';
+
 const router = Router();
 
-router.get('/ogrenciler', requireAuth, kullaniciController.ogrencileriGetir);
-router.get('/ogrenci/:ogrenciNo', requireAuth, kullaniciController.ogrenciGetirById);
-router.delete("/ogrenci/:ogrenciNo", requireAuth, kullaniciController.ogrenciSil);
-router.put("/ogrenci/:ogrenciNo", requireAuth, kullaniciController.ogrenciGuncelle);
+// Yeni Kullanıcı Ekleme
+router.post('/ekle', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.kullaniciOlustur);
 
-router.get('/personeller', requireAuth, kullaniciController.personelleriGetir);
-router.get('/personel/:personelNo', requireAuth, kullaniciController.personelGetirById);
-router.delete("/personel/:personelNo", requireAuth, kullaniciController.personelSil);
-router.put("/personel/:personelNo", requireAuth, kullaniciController.personelGuncelle);
+// Öğrenci rotaları
+router.get('/ogrenciler', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), kullaniciController.ogrencileriGetir);
+router.get('/ogrenci/:ogrenciNo', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), kullaniciController.ogrenciGetirById);
+router.delete("/ogrenci/:ogrenciNo", requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.ogrenciSil);
+router.put("/ogrenci/:ogrenciNo", requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.ogrenciGuncelle);
 
-router.get('/personel/mudurler', requireAuth, kullaniciController.mudurleriGetir);
-router.get('/personel/ogretmenler', requireAuth, kullaniciController.ogretmenleriGetir);
-router.get('/personel/personeller', requireAuth, kullaniciController.personellerGetir);
+// Personel listeleme rotaları
+router.get('/personeller', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.personelleriGetir);
+router.get('/mudurler', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.mudurleriGetir);
+router.get('/ogretmenler', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.ogretmenleriGetir);
+router.get('/personel-listesi', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.personellerGetir);
+
+// Veli rotaları
+router.get('/veliler', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.velileriGetir);
+router.get('/veli/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.veliGetirById);
+router.get('/veli/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.veliGetirById);
+router.delete('/veli/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.veliSil);
+router.patch('/veli/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.veliGuncelle);
+
+// Parametrik personel rotaları
+router.get('/personel/:personelNo', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.personelGetirById);
+router.delete("/personel/:personelNo", requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.personelSil);
+router.patch("/personel/:personelNo", requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.personelGuncelle);
 
 export default router;

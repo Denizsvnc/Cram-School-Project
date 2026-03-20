@@ -36,16 +36,37 @@ export const KullaniciService = {
         return response.data;
     },
     getMudurler: async () => {
-        const response = await api.get("/kullanici/personel/mudurler");
+        const response = await api.get("/kullanici/mudurler");
         return response.data;
     },
     getOgretmenler: async () => {
-        const response = await api.get("/kullanici/personel/ogretmenler");
+        const response = await api.get("/kullanici/ogretmenler");
         return response.data;
     },
 
     getPersonelListesi: async () => {
-        const response = await api.get("/kullanici/personel/personeller");
+        const response = await api.get("/kullanici/personel-listesi");
+        return response.data;
+    },
+    getVeliler: async () => {
+        const response = await api.get("/kullanici/veliler");
+        return response.data;
+    },
+    getVeliById: async (id: string) => {
+        const response = await api.get(`/kullanici/veli/${id}`);
+        return response.data;
+    },
+    veliSil: async (id: string) => {
+        const response = await api.delete(`/kullanici/veli/${id}`);
+        return response.data;
+    },
+    async veliGuncelle(id: string, data: Partial<Kullanici>) {
+        const response = await api.patch(`/kullanici/veli/${id}`, data);
+        return response.data;
+    },
+
+    async kullaniciOlustur(data: any) {
+        const response = await api.post('/kullanici/ekle', data);
         return response.data;
     }
 };

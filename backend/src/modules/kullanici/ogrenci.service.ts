@@ -19,6 +19,7 @@ export const ogrencileriGetir = async () => {
             mail: true,
             tel_no: true,
             tc_no: true,
+            ogrenciNo: true,
             dogum_tarihi: true,
             egitim_durumu: true,
             odeme_plani: true,

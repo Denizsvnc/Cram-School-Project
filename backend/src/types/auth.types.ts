@@ -19,6 +19,8 @@ export interface RegisterRequestBody {
   odeme_plani?: string;
   odeme_durumu?: boolean;
   maas?: string;
+  veli_ID?: string;
+  ogrenci_ids?: string[];
 }
 
 export interface LoginRequestBody {

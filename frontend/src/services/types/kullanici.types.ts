@@ -43,8 +43,8 @@ export interface Kullanici {
     egitim_durumu?: string;
     odeme_plani?: string;
     odeme_durumu?: boolean;
+    maas?: string;
     
-
     ogrenciNo?: number;
     personelNo?: number;
     
@@ -55,6 +55,8 @@ export interface Kullanici {
 
     sinifId?: string;
     sinif?: SinifDetay;
+    veli_ID?: string;
+    ogrenci_ids?: string[];
     veli?: Partial<Kullanici>; // Velinin  bilgileri
     notlar?: NotDetay[];
 }
