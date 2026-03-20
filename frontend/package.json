@@ -5,7 +5,7 @@
   "type": "module",
   "main": "build/main.cjs",
   "scripts": {
-    "dev": "concurrently -k \"vite\" \"npm run build-electron && wait-on http://localhost:5173 && NODE_ENV=development electron . --no-sandbox\"",
+    "dev": "concurrently -k \"vite\" \"npm run build-electron && wait-on http://localhost:5173 && NODE_ENV=development electron . --no-sandbox --ozone-platform=x11 --disable-gpu\"",
     "electron": "electron build/main.cjs",
     "build-electron": "tsc -p electron/tsconfig.electron.json && mv build/main.js build/main.cjs && mv build/preload.js build/preload.cjs",
     "build": "tsc -b && vite build && npm run build-electron",
