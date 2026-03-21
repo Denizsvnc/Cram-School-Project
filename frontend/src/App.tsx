@@ -50,7 +50,7 @@ function App() {
         try {
           await accessTokenYenile();
         } catch {
-          // Cookie yoksa veya geçersizse giriş ekranına düşmesi beklenen davranış.
+          // Cookie yoksa veya geçersizse giriş ekranına düşmesi beklenen davranış
         }
       }
 
@@ -97,7 +97,7 @@ function App() {
 
              {/* Kullanıcı rolüne göre izinli route tanımları ----  Kullanıcı routeları
              öğrenci, veli*/}
-          <Route path="program" element={<ProtectedRoute allowedRoles={["OGRENCI"]}> <Programim />  </ProtectedRoute>} />
+          <Route path="programim" element={<ProtectedRoute allowedRoles={["OGRENCI"]}> <Programim />  </ProtectedRoute>} />
           <Route path="notlarim" element={<ProtectedRoute allowedRoles={["OGRENCI"]}> <Notlarim />  </ProtectedRoute>} />
           <Route path="cocuk" element={<ProtectedRoute allowedRoles={["VELI"]}> <Cocuk />  </ProtectedRoute>} />
           <Route path="plan" element={<ProtectedRoute allowedRoles={["VELI", "OGRENCI"]}> <Odeme_Planim />  </ProtectedRoute>} />

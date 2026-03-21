@@ -186,6 +186,14 @@ export const veliGetirById = async (req: Request, res: Response, next: NextFunct
                 mail: true, tel_no: true, tc_no: true,
                 dogum_tarihi: true, egitim_durumu: true,
                 rol: true, createdAt: true,
+                ogrenciler: {
+                    select: {
+                        id: true, isim: true, soy_isim: true,
+                        ogrenciNo: true,
+                        odeme_plani: true, odeme_durumu: true,
+                        odeme_tutari: true, taksit_sayisi: true,
+                    }
+                }
             }
         });
         if (!veli) {
@@ -225,11 +233,14 @@ export const kullaniciOlustur = async (req: Request, res: Response, next: NextFu
     try {
         console.log("Kullanıcı oluşturma isteği geldi:", req.body);
 
-        // authService zaten yukarıda import edildi
+        if (!req.body.password || req.body.password.length < 6) {
+            res.status(400).json({ message: "Şifre zorunludur ve en az 6 karakter olmalıdır." });
+            return;
+        }
 
         const userData: RegisterRequestBody = {
-            email: req.body.mail, // Request body'de 'mail' geliyor, authService 'email' bekliyor
-            password: 'sifre123', // Varsa
+            email: req.body.mail,
+            password: req.body.password,
             rol: req.body.rol,
             isim: req.body.isim,
             soy_isim: req.body.soy_isim,
@@ -239,7 +250,12 @@ export const kullaniciOlustur = async (req: Request, res: Response, next: NextFu
             egitim_durumu: req.body.egitim_durumu,
             odeme_plani: req.body.odeme_plani,
             odeme_durumu: req.body.odeme_durumu,
+            odeme_tutari: req.body.odeme_tutari ? Number(req.body.odeme_tutari) : undefined!,
+            taksit_sayisi: req.body.taksit_sayisi ? Number(req.body.taksit_sayisi) : undefined!,
             maas: req.body.maas,
+            maas_odendi_mi: req.body.maas_odendi_mi,
+            izin_hakki: req.body.izin_hakki ? Number(req.body.izin_hakki) : undefined!,
+            kullanilan_izin: req.body.kullanilan_izin ? Number(req.body.kullanilan_izin) : undefined!,
             veli_ID: req.body.veli_ID,
             ogrenci_ids: req.body.ogrenci_ids
         };

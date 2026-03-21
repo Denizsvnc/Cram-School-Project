@@ -3,7 +3,7 @@ import { KullaniciService } from "../services/kullaniciApi";
 import type { Kullanici } from "../services/types/kullanici.types";
 import KullaniciTablosu, { KullaniciAvatar } from "./KullaniciTablosu";
 import type { KolonTanimi } from "./KullaniciTablosu";
-import { Typography } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
 import BadgeIcon from "@mui/icons-material/Badge";
 import { useUserActions } from "../hooks/useUserActions";
 import { KullaniciDrawer } from "./KullaniciDrawer";
@@ -12,7 +12,8 @@ const kolonlar: KolonTanimi[] = [
     { baslik: "Personel", render: (k) => <KullaniciAvatar kullanici={k} /> },
     { baslik: "Email", render: (k) => <Typography variant="body2" color="text.secondary">{k.mail}</Typography> },
     { baslik: "Telefon", render: (k) => <Typography variant="body2" color="text.secondary">{k.tel_no || "—"}</Typography> },
-    { baslik: "Eğitim", render: (k) => <Typography variant="body2" color="text.secondary">{k.egitim_durumu || "—"}</Typography> },
+    { baslik: "Maaş", render: (k) => <Chip label={k.maas_odendi_mi ? "Ödendi" : "Ödenmedi"} size="small" color={k.maas_odendi_mi ? "success" : "warning"} sx={{ fontWeight: 600, fontSize: "0.75rem" }} /> },
+    { baslik: "İzin", render: (k) => <Typography variant="body2" color="text.secondary">{k.kullanilan_izin ?? 0}/{k.izin_hakki ?? 0} gün</Typography> },
 ];
 
 export default function Personeller() {

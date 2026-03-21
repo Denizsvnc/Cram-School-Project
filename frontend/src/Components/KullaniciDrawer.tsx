@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
     Drawer, Box, Typography, IconButton, Divider,
-    TextField, Button, Avatar, Chip, Grid, alpha, useTheme
+    TextField, Button, Avatar, Chip, Grid, alpha, useTheme,
+    InputAdornment
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import type { Kullanici } from '../services/types/kullanici.types';
 
 interface KullaniciDrawerProps {
@@ -31,14 +34,16 @@ export const KullaniciDrawer: React.FC<KullaniciDrawerProps> = ({
     const theme = useTheme();
     const [formData, setFormData] = useState<Partial<Kullanici>>({});
     const [isSaving, setIsSaving] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [veliListesi, setVeliListesi] = useState<Kullanici[]>([]);
     const [ogrenciListesi, setOgrenciListesi] = useState<Kullanici[]>([]);
 
     useEffect(() => {
         if (mode === 'create') {
             const defaultRol = user?.rol || 'OGRENCI';
-            setFormData({ 
+            setFormData({
                 rol: defaultRol,
+                password: '',
                 isim: '',
                 soy_isim: '',
                 mail: '',
@@ -46,8 +51,8 @@ export const KullaniciDrawer: React.FC<KullaniciDrawerProps> = ({
                 tc_no: '',
                 dogum_tarihi: '',
                 egitim_durumu: '',
-                ...(defaultRol === 'OGRENCI' ? { odeme_plani: 'Peşin', odeme_durumu: false } : {}),
-                ...(defaultRol === 'OGRETMEN' || defaultRol === 'MUDUR' || defaultRol === 'PERSONEL' ? { maas: '0' } : {})
+                ...(defaultRol === 'OGRENCI' ? { odeme_plani: 'Peşin', odeme_durumu: false, odeme_tutari: undefined, taksit_sayisi: undefined } : {}),
+                ...(defaultRol === 'OGRETMEN' || defaultRol === 'MUDUR' || defaultRol === 'PERSONEL' ? { maas: '0', maas_odendi_mi: false, izin_hakki: 14, kullanilan_izin: 0 } : {})
             });
         } else if (user) {
             setFormData({ ...user });
@@ -214,6 +219,36 @@ export const KullaniciDrawer: React.FC<KullaniciDrawerProps> = ({
                             size="small"
                         />
                     </Grid>
+                    {isCreate && (
+                        <Grid size={{ xs: 12 }}>
+                            <TextField
+                                fullWidth
+                                label="Şifre"
+                                name="password"
+                                type={showPassword ? 'text' : 'password'}
+                                value={formData.password || ''}
+                                onChange={handleChange}
+                                variant="outlined"
+                                required
+                                size="small"
+                                inputProps={{ minLength: 6 }}
+                                helperText="Kullanıcının giriş yapabilmesi için en az 6 karakterli bir şifre belirleyin."
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                onClick={() => setShowPassword(prev => !prev)}
+                                                edge="end"
+                                                size="small"
+                                            >
+                                                {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
+                        </Grid>
+                    )}
                     <Grid size={{ xs: 12 }}>
                         <TextField
                             fullWidth
@@ -304,6 +339,33 @@ export const KullaniciDrawer: React.FC<KullaniciDrawerProps> = ({
                                     <option value="true">Ödendi</option>
                                 </TextField>
                             </Grid>
+                            <Grid size={{ xs: 6 }}>
+                                <TextField
+                                    fullWidth
+                                    label="Ödeme Tutarı (₺)"
+                                    name="odeme_tutari"
+                                    type="number"
+                                    value={formData.odeme_tutari ?? ''}
+                                    onChange={handleChange}
+                                    disabled={isView}
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid size={{ xs: 6 }}>
+                                <TextField
+                                    fullWidth
+                                    label="Taksit Sayısı (Ay)"
+                                    name="taksit_sayisi"
+                                    type="number"
+                                    value={formData.taksit_sayisi ?? ''}
+                                    onChange={handleChange}
+                                    disabled={isView}
+                                    variant="outlined"
+                                    size="small"
+                                    inputProps={{ min: 1 }}
+                                />
+                            </Grid>
                             <Grid size={{ xs: 12 }}>
                                 <TextField
                                     fullWidth
@@ -358,19 +420,66 @@ export const KullaniciDrawer: React.FC<KullaniciDrawerProps> = ({
                     )}
 
                     {(['OGRETMEN', 'MUDUR', 'PERSONEL'].includes(user?.rol || formData.rol || '')) && (
-                        <Grid size={{ xs: 12 }}>
-                            <TextField
-                                fullWidth
-                                label="Maaş"
-                                name="maas"
-                                value={formData.maas || ''}
-                                onChange={handleChange}
-                                disabled={isView}
-                                variant="outlined"
-                                required={isCreate}
-                                size="small"
-                            />
-                        </Grid>
+                        <>
+                            <Grid size={{ xs: 6 }}>
+                                <TextField
+                                    fullWidth
+                                    label="Maaş"
+                                    name="maas"
+                                    value={formData.maas || ''}
+                                    onChange={handleChange}
+                                    disabled={isView}
+                                    variant="outlined"
+                                    required={isCreate}
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid size={{ xs: 6 }}>
+                                <TextField
+                                    fullWidth
+                                    select
+                                    label="Maaş Ödendi Mi"
+                                    name="maas_odendi_mi"
+                                    value={formData.maas_odendi_mi ? 'true' : 'false'}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, maas_odendi_mi: e.target.value === 'true' }))}
+                                    disabled={isView}
+                                    variant="outlined"
+                                    SelectProps={{ native: true }}
+                                    size="small"
+                                >
+                                    <option value="false">Ödenmedi</option>
+                                    <option value="true">Ödendi</option>
+                                </TextField>
+                            </Grid>
+                            <Grid size={{ xs: 6 }}>
+                                <TextField
+                                    fullWidth
+                                    label="İzin Hakkı (Gün)"
+                                    name="izin_hakki"
+                                    type="number"
+                                    value={formData.izin_hakki ?? ''}
+                                    onChange={handleChange}
+                                    disabled={isView}
+                                    variant="outlined"
+                                    size="small"
+                                    inputProps={{ min: 0 }}
+                                />
+                            </Grid>
+                            <Grid size={{ xs: 6 }}>
+                                <TextField
+                                    fullWidth
+                                    label="Kullanılan İzin (Gün)"
+                                    name="kullanilan_izin"
+                                    type="number"
+                                    value={formData.kullanilan_izin ?? ''}
+                                    onChange={handleChange}
+                                    disabled={isView}
+                                    variant="outlined"
+                                    size="small"
+                                    inputProps={{ min: 0 }}
+                                />
+                            </Grid>
+                        </>
                     )}
                 </Grid>
 

@@ -24,6 +24,8 @@ export const ogrencileriGetir = async () => {
             egitim_durumu: true,
             odeme_plani: true,
             odeme_durumu: true,
+            odeme_tutari: true,
+            taksit_sayisi: true,
             createdAt: true, 
             
             // Öğrencinin Sınıf Bilgisi
@@ -94,6 +96,8 @@ export const ogrenciGetirById = async (ogrenciNo: number) => {
             egitim_durumu: true,
             odeme_plani: true,
             odeme_durumu: true,
+            odeme_tutari: true,
+            taksit_sayisi: true,
             createdAt: true, 
             
             // Öğrencinin Sınıf Bilgisi

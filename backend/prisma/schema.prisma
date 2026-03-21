@@ -41,9 +41,14 @@ model Kullanici {
   // Öğrenci İse zorunlu
   odeme_plani String?
   odeme_durumu Boolean?
+  odeme_tutari    Float?   // Toplam ücret (TL)
+  taksit_sayisi   Int?     // Kaç taksit (ay)
 
   // öğretmen, müdür, personel ise zorunlu olmalı 
   maas String?
+  maas_odendi_mi  Boolean?  // Bu ayki maaş ödendi mi
+  izin_hakki      Int?      // Toplam yıllık izin günü
+  kullanilan_izin Int?      // Kullanılan izin günü
   profil_foto_url String?
 
   veli_ID String?

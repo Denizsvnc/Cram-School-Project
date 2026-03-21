@@ -29,17 +29,28 @@ const accessTokenYenile = async (): Promise<string> => {
   return data.accessToken;
 };
 
+//api.interceptors.request.use(
+  //(config) => {
+    //const token = sessionStorage.getItem('token');
+    //if (token) {
+      //config.headers.Authorization = `Bearer ${token}`;
+    //}
+    //return config;
+  //},
+  //(error) => {
+    //return Promise.reject(error);
+  //}
+//);
 api.interceptors.request.use(
   (config) => {
+    const isAuthEndpoint = config.url?.includes('/auth/giris') || config.url?.includes('/auth/refresh') || config.url?.includes('/auth/logout');
     const token = sessionStorage.getItem('token');
-    if (token) {
+    if (token && !isAuthEndpoint) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(

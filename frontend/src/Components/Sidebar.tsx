@@ -32,7 +32,7 @@ const menuByRole: Record<UserRole, MenuItem[]> = {
   ],
   OGRENCI: [
     { label: 'Dashboard', to: '/panel' },
-    { label: 'Ders Programim', to: '/panel/program' },
+    { label: 'Ders Programim', to: '/panel/programim' },
     { label: 'Notlarim', to: '/panel/notlarim' },
     { label: 'Ödeme Planım', to: '/panel/plan' },
 

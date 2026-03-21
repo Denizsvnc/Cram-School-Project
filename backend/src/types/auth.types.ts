@@ -18,7 +18,12 @@ export interface RegisterRequestBody {
   egitim_durumu: string;
   odeme_plani?: string;
   odeme_durumu?: boolean;
+  odeme_tutari?: number;
+  taksit_sayisi?: number;
   maas?: string;
+  maas_odendi_mi?: boolean;
+  izin_hakki?: number;
+  kullanilan_izin?: number;
   veli_ID?: string;
   ogrenci_ids?: string[];
 }

@@ -12,8 +12,8 @@ const kolonlar: KolonTanimi[] = [
     { baslik: "Öğretmen", render: (k) => <KullaniciAvatar kullanici={k} /> },
     { baslik: "No", render: (k) => <Chip label={k.personelNo ? `#${k.personelNo}` : "—"} size="small" variant="outlined" sx={{ fontWeight: 600, fontFamily: "monospace" }} /> },
     { baslik: "Email", render: (k) => <Typography variant="body2" color="text.secondary">{k.mail}</Typography> },
-    { baslik: "Telefon", render: (k) => <Typography variant="body2" color="text.secondary">{k.tel_no || "—"}</Typography> },
-    { baslik: "Eğitim", render: (k) => <Typography variant="body2" color="text.secondary">{k.egitim_durumu || "—"}</Typography> },
+    { baslik: "Maaş", render: (k) => <Chip label={k.maas_odendi_mi ? "Ödendi" : "Ödenmedi"} size="small" color={k.maas_odendi_mi ? "success" : "warning"} sx={{ fontWeight: 600, fontSize: "0.75rem" }} /> },
+    { baslik: "İzin", render: (k) => <Typography variant="body2" color="text.secondary">{k.kullanilan_izin ?? 0}/{k.izin_hakki ?? 0} gün</Typography> },
 ];
 
 export default function Ogretmenler() {

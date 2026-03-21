@@ -14,6 +14,7 @@ const kolonlar: KolonTanimi[] = [
     { baslik: "Email", render: (k) => <Typography variant="body2" color="text.secondary">{k.mail}</Typography> },
     { baslik: "Telefon", render: (k) => <Typography variant="body2" color="text.secondary">{k.tel_no || "—"}</Typography> },
     { baslik: "Ödeme", render: (k) => <Chip label={k.odeme_durumu ? "Ödendi" : "Ödenmedi"} size="small" color={k.odeme_durumu ? "success" : "warning"} sx={{ fontWeight: 600, fontSize: "0.75rem" }} /> },
+    { baslik: "Tutar", render: (k) => <Typography variant="body2" color="text.secondary">{k.odeme_tutari ? `${k.odeme_tutari.toLocaleString('tr-TR')} ₺` : "—"}{k.taksit_sayisi ? ` (${k.taksit_sayisi} ay)` : ""}</Typography> },
 ];
 
 export default function Ogrenciler() {
