@@ -87,7 +87,7 @@ model Sinif {
 
 model Ders {
   id           String         @id @default(uuid())
-  isim         String         @unique // Örn: matematik
+  isim         String         @unique
 
   ders_suresi Int @default(40)
   programlar   DersProgrami[]
