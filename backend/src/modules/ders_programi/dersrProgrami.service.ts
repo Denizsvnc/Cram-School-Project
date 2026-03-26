@@ -1,5 +1,5 @@
-import { getPrismaClient } from '../core/config/prisma';
-import { NotFoundError, UnauthorizedError } from '../modules/errors/customErrors';
+import { getPrismaClient } from '../../core/config/prisma';
+import { NotFoundError, UnauthorizedError } from '../errors/customErrors';
 const prisma = getPrismaClient();
 
 // Ders programı oluştur

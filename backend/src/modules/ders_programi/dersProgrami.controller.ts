@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import * as dersProgrami from './dersrProgrami.service';
-
 export const programOlustur = async (req: Request, res: Response, next: NextFunction) => {
     try{
         const programData = req.body;
