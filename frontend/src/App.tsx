@@ -15,6 +15,7 @@ import Siniflar from './Pages/Yonetici_Pages/Siniflar';
 import Program from './Pages/Yonetici_Pages/Program';
 import NotGirisi from './Pages/Yonetici_Pages/Not_Girisi';
 import Kayit from './Pages/Yonetici_Pages/Kayit';
+import Odemeler from './Pages/Yonetici_Pages/Odemeler';
 
 // Öğrenci, Veli page importları
 import Programim from './Pages/Kullanici_Pages/Programim';
@@ -92,6 +93,7 @@ function App() {
           <Route path="program" element={<ProtectedRoute allowedRoles={["YONETICI", "OGRETMEN"]}> <Program />  </ProtectedRoute>} />
           <Route path="notlar" element={<ProtectedRoute allowedRoles={["YONETICI", "OGRETMEN", "MUDUR"]}> <NotGirisi />  </ProtectedRoute>} />
           <Route path="kayit-islemleri" element={<ProtectedRoute allowedRoles={["YONETICI", "PERSONEL", "MUDUR"]}> <Kayit />  </ProtectedRoute>} />
+          <Route path="odemeler" element={<ProtectedRoute allowedRoles={["YONETICI", "MUDUR"]}> <Odemeler />  </ProtectedRoute>} />
 
           
 

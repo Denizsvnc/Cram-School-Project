@@ -12,6 +12,7 @@ import sinifRoutes from './modules/sinif/sinif.routes';
 import dersProgramiRoutes from './modules/ders_programi/dersProgrami.routes';
 import yoklamaRoutes from './modules/yoklama/yoklama.routes';
 import sinavNotuRoutes from './modules/sinavNotu/sinavNotu.routes';
+import { odemeRouter } from './modules/odeme/odeme.route';
 const app: Application = express();
 
 
@@ -38,6 +39,7 @@ app.use('/sinif', sinifRoutes);
 app.use('/ders-programi', dersProgramiRoutes);
 app.use('/yoklama', yoklamaRoutes);
 app.use('/sinav-notu', sinavNotuRoutes);
+app.use('/odeme', odemeRouter);
 
 app.use(errorHandler);
 

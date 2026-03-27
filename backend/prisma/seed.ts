@@ -29,13 +29,13 @@ async function main() {
 
   // --- YÖNETİCİ ---
   const yonetici = await prisma.kullanici.upsert({
-    where: { mail: 'admin@dershane.com' },
+    where: { mail: 'admin@mail.com' },
     update: {},
     create: {
       isim: 'Admin',
       soy_isim: 'Yönetici',
       tel_no: '05001112233',
-      mail: 'admin@dershane.com',
+      mail: 'admin@mail.com',
       sifre: sifreHash,
       tc_no: '10000000001',
       dogum_tarihi: new Date('1985-01-15'),
@@ -237,8 +237,83 @@ async function main() {
     console.log(`✅ Personel: ${created.mail} (personelNo: ${created.personelNo})`);
   }
 
+  // --- SINIFLAR ---
+  const sinif12A = await prisma.sinif.upsert({
+    where: { isim: '12-A Sayısal' },
+    update: {},
+    create: { isim: '12-A Sayısal', kapasite: 20 },
+  });
+  console.log(`✅ Sınıf eklendi: ${sinif12A.isim}`);
+
+  // --- DERSLER ---
+  const dersMat = await prisma.ders.upsert({
+    where: { isim: 'Matematik' },
+    update: {},
+    create: { isim: 'Matematik', ders_suresi: 40 },
+  });
+  const dersFizik = await prisma.ders.upsert({
+    where: { isim: 'Fizik' },
+    update: {},
+    create: { isim: 'Fizik', ders_suresi: 40 },
+  });
+  console.log(`✅ Dersler eklendi: Matematik, Fizik`);
+
+  // --- DERS PROGRAMI ---
+  const ogretmenAhmet = await prisma.kullanici.findUnique({ where: { mail: 'ahmet.kaya@dershane.com' } });
+  if (ogretmenAhmet) {
+    // Check if a program already exists to avoid duplicates
+    const existingProgram = await prisma.dersProgrami.findFirst({
+      where: {
+        sinifId: sinif12A.id,
+        dersId: dersMat.id,
+        ogretmenId: ogretmenAhmet.id,
+      }
+    });
+
+    if (!existingProgram) {
+      await prisma.dersProgrami.create({
+        data: {
+          gun: 1, // Pazartesi
+          baslangic: '09:00',
+          bitis: '09:40',
+          sinifId: sinif12A.id,
+          dersId: dersMat.id,
+          ogretmenId: ogretmenAhmet.id,
+        },
+      });
+      console.log(`✅ Ders Programı eklendi: Matematik (Pazartesi 09:00 - Ahmet Kaya)`);
+    } else {
+      console.log(`⏭️  Ders Programı zaten mevcut`);
+    }
+  }
+
+  // --- ÖĞRENCİLERİ SINIFA ATA ---
+  await prisma.kullanici.updateMany({
+    where: { rol: 'OGRENCI', sinifId: null },
+    data: { sinifId: sinif12A.id },
+  });
+  console.log(`✅ Atanmamış öğrenciler 12-A sınıfına atandı.`);
+
+  // --- ÖDEMELER ---
+  const ogrencilerYeni = await prisma.kullanici.findMany({ where: { rol: 'OGRENCI' } });
+  for (const ogrenci of ogrencilerYeni) {
+    const existingOdeme = await prisma.odeme.findFirst({ where: { kullaniciId: ogrenci.id } });
+    if (!existingOdeme) {
+      await prisma.odeme.createMany({
+        data: [
+          { kullaniciId: ogrenci.id, miktar: 2500, durum: 'ODENDI', aciklama: '1. Taksit (Eylül)' },
+          { kullaniciId: ogrenci.id, miktar: 2500, durum: 'ONAYLANDI', aciklama: '2. Taksit (Ekim)' },
+          { kullaniciId: ogrenci.id, miktar: 2500, durum: 'BEKLIYOR', aciklama: '3. Taksit (Kasım)' },
+          { kullaniciId: ogrenci.id, miktar: 2500, durum: 'BEKLIYOR', aciklama: '4. Taksit (Aralık) - Güncel', sonOdemeTarihi: new Date() }
+        ]
+      });
+    }
+  }
+  console.log(`✅ Ödemeler örneği oluşturuldu.`);
+
   console.log('\n🎉 Seed tamamlandı!');
 }
+
 
 main()
   .catch((e) => {

@@ -31,3 +31,13 @@ export const kullaniciRolunuGetir = (): UserRole | null => {
         return null;
     }
 };
+
+export const getCurrentUser = (): TokenPayload | null => {
+    const token = tokenGetir();
+    if (!token) return null;
+    try {
+        return jwtDecode<TokenPayload>(token);
+    } catch {
+        return null;
+    }
+};

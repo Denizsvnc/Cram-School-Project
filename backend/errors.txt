@@ -1,0 +1,3 @@
+src/modules/odeme/odeme.controller.ts(12,18): error TS2412: Type 'string | string[] | undefined' is not assignable to type 'string | StringFilter<"Odeme"> | undefined' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+src/modules/odeme/odeme.controller.ts(37,18): error TS2412: Type 'string | string[] | undefined' is not assignable to type 'string | undefined' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+src/modules/odeme/odeme.controller.ts(52,18): error TS2412: Type 'string | string[] | undefined' is not assignable to type 'string | undefined' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.

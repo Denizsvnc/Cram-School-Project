@@ -13,6 +13,7 @@ const menuByRole: Record<UserRole, MenuItem[]> = {
     { label: 'Ayarlar', to: '/panel/ayarlar' },
     { label: 'Siniflar', to: '/panel/siniflar' },
     { label: 'Kayit Islemleri', to: '/panel/kayit-islemleri' },
+    { label: 'Ödemeler', to: '/panel/odemeler' },
 
 
   ],
@@ -20,6 +21,7 @@ const menuByRole: Record<UserRole, MenuItem[]> = {
     { label: 'Dashboard', to: '/panel' },
     { label: 'Siniflar', to: '/panel/siniflar' },
     { label: 'Kayit Islemleri', to: '/panel/kayit-islemleri' },
+    { label: 'Ödemeler', to: '/panel/odemeler' },
 
   ],
   OGRETMEN: [

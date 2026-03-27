@@ -5,9 +5,9 @@
   "type": "module",
   "main": "build/main.cjs",
   "scripts": {
-    "dev": "concurrently -k \"vite\" \"npm run build-electron && wait-on http://localhost:5173 && NODE_ENV=development electron . --no-sandbox --ozone-platform=x11 --disable-gpu\"",
+    "dev": "concurrently -k \"vite\" \"npm run build-electron && wait-on http://localhost:5173 && cross-env NODE_ENV=development electron . --no-sandbox --ozone-platform=x11 --disable-gpu\"",
     "electron": "electron build/main.cjs",
-    "build-electron": "tsc -p electron/tsconfig.electron.json && mv build/main.js build/main.cjs && mv build/preload.js build/preload.cjs",
+    "build-electron": "tsc -p electron/tsconfig.electron.json && node -e \"require('fs').renameSync('build/main.js', 'build/main.cjs'); require('fs').renameSync('build/preload.js', 'build/preload.cjs')\"",
     "build": "tsc -b && vite build && npm run build-electron",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -33,6 +33,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.0",
     "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
     "electron": "^41.0.3",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
