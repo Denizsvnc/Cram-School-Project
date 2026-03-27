@@ -19,7 +19,7 @@ function createWindow() {
         mainWindow.loadURL("http://localhost:5173");
     }
     else {
-        mainWindow.loadFile(path_1.default.join(__dirname, "../build/index.html"));
+        mainWindow.loadFile(path_1.default.join(__dirname, "../dist/index.html"));
     }
 }
 electron_1.app.whenReady().then(createWindow);

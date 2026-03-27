@@ -9,6 +9,7 @@
     "electron": "electron build/main.cjs",
     "build-electron": "tsc -p electron/tsconfig.electron.json && node -e \"require('fs').renameSync('build/main.js', 'build/main.cjs'); require('fs').renameSync('build/preload.js', 'build/preload.cjs')\"",
     "build": "tsc -b && vite build && npm run build-electron",
+    "electron:pack": "npm run build && electron-builder --dir",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -35,6 +36,7 @@
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "electron": "^41.0.3",
+    "electron-builder": "^26.8.1",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
@@ -43,5 +45,19 @@
     "typescript-eslint": "^8.56.1",
     "vite": "^8.0.0",
     "wait-on": "^9.0.4"
+  },
+  "build": {
+    "appId": "com.cramschool.app",
+    "productName": "Cram School Yönetim",
+    "directories": {
+      "output": "dist_electron"
+    },
+    "files": [
+      "dist/**/*",
+      "build/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    }
   }
 }

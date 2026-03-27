@@ -16,12 +16,14 @@ import { odemeRouter } from './modules/odeme/odeme.route';
 const app: Application = express();
 
 
-const frontendOrigins = (process.env.FRONTEND_ORIGINS ?? 'http://localhost:5173,http://localhost:3000')
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean);
+const originsEnv = process.env.FRONTEND_ORIGINS ?? 'http://localhost:5173,http://localhost:3000,file://';
+let corsOrigin: string | string[] = originsEnv.split(',').map((origin) => origin.trim()).filter(Boolean);
 
-app.use(cors({ origin: frontendOrigins, credentials: true }));
+if (originsEnv === '*') {
+    corsOrigin = '*';
+}
+
+app.use(cors({ origin: corsOrigin, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 

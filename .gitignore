@@ -1,0 +1,22 @@
+# Build outputs
+frontend/dist_electron/
+backend/dist/
+frontend/dist/
+dist/
+build/
+win-unpacked/
+
+# Logs
+*.log
+*.txt
+frontend/build_logs.txt
+frontend/electron_build_logs.txt
+backend/errors.txt
+backend/tsc_errors.log
+
+# Dependencies
+node_modules/
+
+# OS Files
+.DS_Store
+Thumbs.db
