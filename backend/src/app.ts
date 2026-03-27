@@ -9,7 +9,9 @@ import authRoutes from './modules/auth/auth.routes';
 // modül route importları
 import kullaniciRoutes from './modules/kullanici/kullanici.routes';
 import sinifRoutes from './modules/sinif/sinif.routes';
-
+import dersProgramiRoutes from './modules/ders_programi/dersProgrami.routes';
+import yoklamaRoutes from './modules/yoklama/yoklama.routes';
+import sinavNotuRoutes from './modules/sinavNotu/sinavNotu.routes';
 const app: Application = express();
 
 
@@ -22,7 +24,7 @@ app.use(cors({ origin: frontendOrigins, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-// heal check endpoint
+// health check endpoint
 app.get('/saglik', (req: Request, res: Response) => {
     res.status(200).json({ message: "Sunucu Sağlıklı Şekilde Çalışıyor!" });
 });
@@ -33,6 +35,9 @@ app.use('/auth', authRoutes);
 
 app.use('/kullanici', kullaniciRoutes);
 app.use('/sinif', sinifRoutes);
+app.use('/ders-programi', dersProgramiRoutes);
+app.use('/yoklama', yoklamaRoutes);
+app.use('/sinav-notu', sinavNotuRoutes);
 
 app.use(errorHandler);
 

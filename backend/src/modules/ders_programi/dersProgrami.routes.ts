@@ -3,15 +3,15 @@ import * as dersProramiController from './dersProgrami.controller';
 import { requireAuth } from '../../core/middlewares/auth.middleware';
 import { Roller } from '../../../generated/prisma/enums';
 import { yetkiKontrol } from '../../core/middlewares/role.middleware';
+import { dersProgramiOlusturValidation, dersProgramiGuncelleValidation } from './dersProgrami.validate';
+import validateRequest from '../../core/middlewares/validateRequest';
 const router = Router();
 
-router.post('/olustur', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), dersProramiController.programOlustur);
-router.put('/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), dersProramiController.programGuncelle);
+router.post('/olustur', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), dersProgramiOlusturValidation, validateRequest, dersProramiController.programOlustur);
+router.put('/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), dersProgramiGuncelleValidation, validateRequest, dersProramiController.programGuncelle);
 router.delete('/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), dersProramiController.programSil);
 router.get('/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN, Roller.OGRENCI, Roller.VELI]), dersProramiController.programGetir);
 router.get('/sinif/:sinifId', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), dersProramiController.sinifProgramlari);
 router.get('/ders/:dersId', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), dersProramiController.dersProgramlari);    
-
-
 
 export default router;

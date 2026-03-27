@@ -3,14 +3,16 @@ import * as sinavNotuController from './sinavNotu.controller';
 import { requireAuth } from '../../core/middlewares/auth.middleware';
 import { Roller } from '../../../generated/prisma/enums';
 import { yetkiKontrol } from '../../core/middlewares/role.middleware';
+import { sinavNotuOlusturValidation, sinavNotuGuncelleValidation } from './sinavNotu.validate';
+import validateRequest from '../../core/middlewares/validateRequest';
 
 const router = Router();
 
 // Sınav notu oluşturma (Yönetici, Müdür, Öğretmen)
-router.post('/olustur', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), sinavNotuController.notOlustur);
+router.post('/olustur', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), sinavNotuOlusturValidation, validateRequest, sinavNotuController.notOlustur);
 
 // Sınav notu güncelleme (Yönetici, Müdür, Öğretmen)
-router.put('/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), sinavNotuController.notGuncelle);
+router.put('/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), sinavNotuGuncelleValidation, validateRequest, sinavNotuController.notGuncelle);
 
 // Sınav notu silme (Yönetici, Müdür, Öğretmen)
 router.delete('/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), sinavNotuController.notSil);
