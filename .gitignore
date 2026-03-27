@@ -1,10 +1,14 @@
 # Build outputs
 frontend/dist_electron/
+frontend/dist_app/
 backend/dist/
 frontend/dist/
 dist/
+dist_app/
 build/
 win-unpacked/
+Cram-School-Builder/
+electron_cache/
 
 # Logs
 *.log

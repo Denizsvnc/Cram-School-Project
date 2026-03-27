@@ -9,7 +9,7 @@
     "electron": "electron build/main.cjs",
     "build-electron": "tsc -p electron/tsconfig.electron.json && node -e \"require('fs').renameSync('build/main.js', 'build/main.cjs'); require('fs').renameSync('build/preload.js', 'build/preload.cjs')\"",
     "build": "tsc -b && vite build && npm run build-electron",
-    "electron:pack": "npm run build && electron-builder --dir",
+    "electron:pack": "npm run build && npx electron-packager . \"Cram School Yonetim\" --platform=win32 --arch=x64 --out=dist_app --overwrite",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -37,6 +37,7 @@
     "cross-env": "^10.1.0",
     "electron": "^41.0.3",
     "electron-builder": "^26.8.1",
+    "electron-packager": "^17.1.2",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
@@ -49,8 +50,9 @@
   "build": {
     "appId": "com.cramschool.app",
     "productName": "Cram School Yönetim",
+    "asar": false,
     "directories": {
-      "output": "dist_electron"
+      "output": "dist_app"
     },
     "files": [
       "dist/**/*",
