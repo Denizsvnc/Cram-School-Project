@@ -1,65 +1,46 @@
 # API Endpoints
 
-Bu dosya, Postman ile test edilebilecek temel backend API endpointlerini özetler.
+Tüm endpointler JSON döner. Giriş gerektirenlerde Bearer accessToken kullanılır.
 
-## Authentication
-
-- **POST /auth/kayit**
-  - Kullanıcı kaydı
-  - Body: { email, password, rol, isim, soy_isim, tel_no, tc_no, dogum_tarihi, egitim_durumu, odeme_planı?, odeme_durumu?, maas? }
-  - Response: { mesaj, kullanici }
-    {
-    "email" : "ogrenci@mail.com",
-    "password" : "123",
-    "rol" : "OGRENCI",
-    "isim" : "öğrenci1",
-    "soy_isim" : "öğrenci 1 Soyisim",
-    "tel_no" : "0555555",
-    "tc_no" : "111111111",
-    "dogum_tarihi" : "01.01.2001",
-    "egitim_durumu" : "lise",
-    "odeme_planı" : "aydan aya",
-    "odeme_durumu" : true,
-    "maas" : "10000"
-    }
-- **POST /auth/giris**
-  - Kullanıcı girişi
-  - Body: { email, password }
-  - Response: { mesaj, kullanici, role, accessToken }
-  - Cookie: refreshToken (otomatik set edilir)
-
-- **POST /auth/refresh**
-  - Access token yenileme
-  - Cookie: refreshToken
-  - Response: { accessToken }
-
-- **POST /auth/logout**
-  - Oturumu sonlandırma
-  - Cookie: refreshToken
-  - Response: 204 No Content
+## Auth
+- **POST /auth/kayit** — Kayıt ol
+- **POST /auth/giris** — Giriş yap
+- **POST /auth/refresh** — Token yenile
+- **POST /auth/logout** — Çıkış yap
 
 ## Kullanıcı
+- **GET /kullanici/ogrenciler** — Öğrenci listesi
+- **POST /kullanici/ekle** — Kullanıcı ekle
+- **PUT /kullanici/ogrenci/:ogrenciNo** — Öğrenci güncelle
+- **DELETE /kullanici/ogrenci/:ogrenciNo** — Öğrenci sil
 
-- **GET /kullanici/ogrenciler**
-  - Tüm öğrencileri listeler
-  - Header: Authorization: Bearer {accessToken}
-  - Response: { message, ogrenciler, toplamOgrenci }
+## Sınıf
+- **GET /sinif/liste** — Sınıf listesi
+- **POST /sinif/** — Sınıf oluştur
+- **DELETE /sinif/:isim** — Sınıf sil
 
-## Sağlık Kontrolü
+## Ders
+- **GET /ders/tum-dersler** — Tüm dersler
+- **POST /ders/olustur** — Ders oluştur
+- **PUT /ders/:dersId** — Ders güncelle
+- **DELETE /ders/:dersId** — Ders sil
 
-- **GET /saglik**
-  - Sunucu sağlık kontrolü
-  - Response: { message }
+## Ders Programı
+- **POST /ders-programi/olustur** — Program oluştur
+- **PUT /ders-programi/:id** — Program güncelle
+- **DELETE /ders-programi/:id** — Program sil
+
+## Sınav Notu
+- **POST /sinav-notu/olustur** — Not ekle
+- **PUT /sinav-notu/:id** — Not güncelle
+- **DELETE /sinav-notu/:id** — Not sil
+
+## Yoklama
+- **POST /yoklama/olustur** — Yoklama ekle
+- **PUT /yoklama/:id** — Yoklama güncelle
+- **DELETE /yoklama/:id** — Yoklama sil
+
+## Sağlık
+- **GET /saglik** — Sunucu sağlık kontrolü
 
 ---
-
-Tüm endpointler JSON formatında yanıt verir. Yetkilendirme gerektiren endpointlerde Bearer accessToken kullanılır.
-
-Test için örnek istekler:
-
-- Kayıt: POST /auth/kayit
-- Giriş: POST /auth/giris
-- Token yenileme: POST /auth/refresh
-- Çıkış: POST /auth/logout
-- Öğrenci listesi: GET /kullanici/ogrenciler
-- Sağlık: GET /saglik
