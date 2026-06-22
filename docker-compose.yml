@@ -17,7 +17,7 @@ services:
     build:
       context: ./backend
     ports:
-      - "3000:3000"
+      - "3131:3000"
     environment:
       - DATABASE_URL=postgresql://${DB_USER:-cramschool}:${DB_PASSWORD:-crampassword}@db:5432/${DB_NAME:-dershane}?schema=public
       - JWT_SECRET=${JWT_SECRET:-supersecretkey123}
