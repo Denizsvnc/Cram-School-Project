@@ -5,7 +5,7 @@ import { Roller } from '../../../generated/prisma/enums';
 import { yetkiKontrol } from '../../core/middlewares/role.middleware';
 const router = Router();
 
-router.post('/', requireAuth, sinifController.sinifOlustur);
+router.post('/', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), sinifController.sinifOlustur);
 router.get('/liste', requireAuth, sinifController.siniflariGetir);
 router.get('/detay/:isim', requireAuth, sinifController.sinifDetayGetir);
 

@@ -268,3 +268,114 @@ export const kullaniciOlustur = async (req: Request, res: Response, next: NextFu
         res.status(400).json({ message: err.message || "Kullanıcı oluşturulamadı." });
     }
 };
+
+export const arsivdekiKullanicilariGetir = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const prisma = (await import('../../core/config/prisma')).getPrismaClient();
+        const arsivdekiler = await prisma.kullanici.findMany({
+            where: { aktifMi: false },
+            select: {
+                id: true,
+                isim: true,
+                soy_isim: true,
+                mail: true,
+                tel_no: true,
+                tc_no: true,
+                rol: true,
+                ogrenciNo: true,
+                personelNo: true,
+                dogum_tarihi: true,
+                egitim_durumu: true,
+                createdAt: true
+            },
+            orderBy: { updatedAt: 'desc' }
+        });
+        res.status(200).json({
+            message: "Arşivdeki kullanıcılar başarıyla getirildi.",
+            kullanicilar: arsivdekiler,
+            count: arsivdekiler.length
+        });
+    } catch (err) { next(err); }
+};
+
+export const kullaniciGeriYukle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const id = req.params.id;
+        if (typeof id !== 'string') {
+            res.status(400).json({ message: "Geçersiz kullanıcı ID." });
+            return;
+        }
+        const { rol } = req.body;
+        const prisma = (await import('../../core/config/prisma')).getPrismaClient();
+        
+        const mevcut = await prisma.kullanici.findUnique({ where: { id } });
+        if (!mevcut) {
+            res.status(404).json({ message: "Kullanıcı bulunamadı." });
+            return;
+        }
+        
+        let yeniRol = rol || mevcut.rol;
+        if (yeniRol === "ESKI_OGRENCI") {
+            yeniRol = "OGRENCI";
+        } else if (yeniRol === "ESKI_PERSONEL") {
+            yeniRol = "PERSONEL";
+        } else if (yeniRol === "ESKI_VELI") {
+            yeniRol = "VELI";
+        }
+        
+        const guncel = await prisma.kullanici.update({
+            where: { id },
+            data: {
+                aktifMi: true,
+                rol: yeniRol
+            }
+        });
+        
+        res.status(200).json({
+            message: "Kullanıcı başarıyla arşivden geri yüklendi.",
+            user: guncel
+        });
+    } catch (err) { next(err); }
+};
+
+export const profilGetir = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const kullanici = (req as any).kullanici;
+        if (!kullanici) {
+            res.status(401).json({ message: "Giriş yapmanız gerekiyor." });
+            return;
+        }
+        const prisma = (await import('../../core/config/prisma')).getPrismaClient();
+        const profil = await prisma.kullanici.findUnique({
+            where: { id: kullanici.id },
+            include: {
+                sinif: true,
+                veli: true,
+                ogrenciler: {
+                    include: {
+                        sinif: true
+                    }
+                }
+            }
+        });
+        res.status(200).json({ profil });
+    } catch (err) { next(err); }
+};
+
+export const topluMaasSifirla = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const prisma = (await import('../../core/config/prisma')).getPrismaClient();
+        await prisma.kullanici.updateMany({
+            where: {
+                rol: {
+                    in: [Roller.MUDUR, Roller.OGRETMEN, Roller.PERSONEL]
+                },
+                aktifMi: true
+            },
+            data: {
+                maas_odendi_mi: false
+            }
+        });
+        res.status(200).json({ message: "Tüm personellerin maaş ödeme durumları başarıyla sıfırlandı." });
+    } catch (err) { next(err); }
+};

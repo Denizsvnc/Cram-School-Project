@@ -28,6 +28,13 @@ const yeniPersonelNoUret = async (): Promise<number> => {
     });
     return (result._max.personelNo || 0) + 1;
 };
+const yeniKimlikNoUret = async (): Promise<number> => {
+    const prisma = getPrismaClient();
+    const result = await prisma.kullanici.aggregate({
+        _max: { kimlikNo: true }
+    });
+    return Math.max(100000, (result._max.kimlikNo || 100000)) + 1;
+};
 export const kullaniciKayit = async (data: RegisterRequestBody): Promise<RegisterServiceResponse> => {
   const prisma = getPrismaClient();
   const maasZorunluRoller = new Set(['OGRETMEN', 'MUDUR', 'PERSONEL']);
@@ -73,6 +80,7 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
   const hashedPassword = await bcrypt.hash(data.password, salt);
   const uretilenNo = isOgrenci ? await yeniOgrenciNoUret() : null
   const uretilenPersonelNo = isPersonel ? await yeniPersonelNoUret() : null
+  const uretilenKimlikNo = await yeniKimlikNoUret();
 
   //  Kullanıcıyı veritabanına kaydet
   const newUser = await prisma.kullanici.create({
@@ -96,6 +104,8 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
       kullanilan_izin: maasZorunluRoller.has(data.rol) ? (data.kullanilan_izin ?? 0) : null,
       ogrenciNo: uretilenNo,
       personelNo: uretilenPersonelNo,
+      kimlikNo: uretilenKimlikNo,
+
       ...(data.rol === 'OGRENCI' && data.veli_ID ? { veli_ID: data.veli_ID } : {}),
       ...(data.rol === 'VELI' && data.ogrenci_ids ? {
         ogrenciler: {
@@ -104,6 +114,43 @@ export const kullaniciKayit = async (data: RegisterRequestBody): Promise<Registe
       } : {})
     }
   });
+
+  // Öğrenci için ödeme kayıtlarını otomatik oluştur
+  if (newUser.rol === 'OGRENCI') {
+    const tutar = data.odeme_tutari ? Number(data.odeme_tutari) : 0;
+    if (tutar > 0) {
+      if (odemePlani === 'Peşin') {
+        await prisma.odeme.create({
+          data: {
+            kullaniciId: newUser.id,
+            miktar: tutar,
+            durum: odemeDurumu ? 'ONAYLANDI' : 'BEKLIYOR',
+            aciklama: 'Peşin Ödeme',
+            sonOdemeTarihi: odemeDurumu ? new Date() : null
+          }
+        });
+      } else if (odemePlani === 'Aylık') {
+        const taksitSayisi = data.taksit_sayisi ? Number(data.taksit_sayisi) : 1;
+        const taksitMiktari = Math.round((tutar / taksitSayisi) * 100) / 100;
+        const taksitler = [];
+        const bugun = new Date();
+        for (let i = 1; i <= taksitSayisi; i++) {
+          const sonTarih = new Date(bugun.getFullYear(), bugun.getMonth() + i - 1, bugun.getDate());
+          taksitler.push({
+            kullaniciId: newUser.id,
+            miktar: i === taksitSayisi ? (tutar - (taksitMiktari * (taksitSayisi - 1))) : taksitMiktari,
+            durum: (i === 1 && odemeDurumu) ? 'ONAYLANDI' : 'BEKLIYOR',
+            aciklama: `${i}. Taksit`,
+            sonOdemeTarihi: (i === 1 && odemeDurumu) ? new Date() : null,
+            tarih: sonTarih
+          });
+        }
+        await prisma.odeme.createMany({
+          data: taksitler
+        });
+      }
+    }
+  }
 
   // şifreyi backend de tutarak döndür
   const { sifre, ...userWithoutPassword } = newUser;

@@ -12,20 +12,25 @@ async function main() {
 
   console.log('Seed başlatılıyor...');
 
-  // Mevcut en yüksek numaraları bul
-  const sonPersonel = await prisma.kullanici.findFirst({
-    where: { personelNo: { not: null } },
-    orderBy: { personelNo: 'desc' },
-    select: { personelNo: true },
-  });
-  const sonOgrenci = await prisma.kullanici.findFirst({
-    where: { ogrenciNo: { not: null } },
-    orderBy: { ogrenciNo: 'desc' },
-    select: { ogrenciNo: true },
-  });
+  // Database cleanup to prevent constraints violations
+  await prisma.session.deleteMany();
+  await prisma.odeme.deleteMany();
+  await prisma.yoklama.deleteMany();
+  await prisma.sinavNotu.deleteMany();
+  await prisma.dersProgrami.deleteMany();
+  await prisma.duyuru.deleteMany();
+  await prisma.odevTeslim.deleteMany();
+  await prisma.odev.deleteMany();
+  await prisma.dersMateryali.deleteMany();
+  await prisma.sinavTakvimi.deleteMany();
+  await prisma.veliGorusme.deleteMany();
+  await prisma.kullanici.deleteMany();
+  await prisma.sinif.deleteMany();
+  await prisma.ders.deleteMany();
 
-  let personelNo = (sonPersonel?.personelNo ?? 0) + 1;
-  let ogrenciNo = (sonOgrenci?.ogrenciNo ?? 0) + 1;
+  let nextKimlikNo = 100001;
+  let personelNo = 1;
+  let ogrenciNo = 1;
 
   // --- YÖNETİCİ ---
   const yonetici = await prisma.kullanici.upsert({
@@ -42,6 +47,7 @@ async function main() {
       rol: 'YONETICI',
       egitim_durumu: 'Lisans',
       maas: '25000',
+      kimlikNo: nextKimlikNo++,
     },
   });
   console.log(`✅ Yönetici: ${yonetici.mail}`);
@@ -71,17 +77,13 @@ async function main() {
   ];
 
   for (const ogretmen of ogretmenler) {
-    const mevcut = await prisma.kullanici.findUnique({ where: { mail: ogretmen.mail } });
-    if (mevcut) {
-      console.log(`⏭️  Öğretmen zaten mevcut: ${ogretmen.mail}`);
-      continue;
-    }
     const created = await prisma.kullanici.create({
       data: {
         ...ogretmen,
         sifre: sifreHash,
         rol: 'OGRETMEN',
         personelNo: personelNo++,
+        kimlikNo: nextKimlikNo++,
       },
     });
     console.log(`✅ Öğretmen: ${created.mail} (personelNo: ${created.personelNo})`);
@@ -137,11 +139,6 @@ async function main() {
   ];
 
   for (const ogrenci of ogrenciler) {
-    const mevcut = await prisma.kullanici.findUnique({ where: { mail: ogrenci.mail } });
-    if (mevcut) {
-      console.log(`⏭️  Öğrenci zaten mevcut: ${ogrenci.mail}`);
-      continue;
-    }
     const created = await prisma.kullanici.create({
       data: {
         ...ogrenci,
@@ -150,6 +147,7 @@ async function main() {
         ogrenciNo: ogrenciNo++,
         odeme_plani: 'Aylık',
         odeme_durumu: true,
+        kimlikNo: nextKimlikNo++,
       },
     });
     console.log(`✅ Öğrenci: ${created.mail} (ogrenciNo: ${created.ogrenciNo})`);
@@ -157,25 +155,23 @@ async function main() {
 
   // --- MÜDÜR ---
   const mudurMail = 'mudur@dershane.com';
-  const mevcutMudur = await prisma.kullanici.findUnique({ where: { mail: mudurMail } });
-  if (!mevcutMudur) {
-    const createdMudur = await prisma.kullanici.create({
-      data: {
-        isim: 'Leyla',
-        soy_isim: 'Aydın',
-        tel_no: '05552223344',
-        mail: mudurMail,
-        sifre: sifreHash,
-        tc_no: '40000000001',
-        dogum_tarihi: new Date('1980-08-20'),
-        rol: 'MUDUR',
-        personelNo: personelNo++,
-        egitim_durumu: 'Doktora',
-        maas: '35000',
-      },
-    });
-    console.log(`✅ Müdür: ${createdMudur.mail} (personelNo: ${createdMudur.personelNo})`);
-  }
+  const createdMudur = await prisma.kullanici.create({
+    data: {
+      isim: 'Leyla',
+      soy_isim: 'Aydın',
+      tel_no: '05552223344',
+      mail: mudurMail,
+      sifre: sifreHash,
+      tc_no: '40000000001',
+      dogum_tarihi: new Date('1980-08-20'),
+      rol: 'MUDUR',
+      personelNo: personelNo++,
+      egitim_durumu: 'Doktora',
+      maas: '35000',
+      kimlikNo: nextKimlikNo++,
+    },
+  });
+  console.log(`✅ Müdür: ${createdMudur.mail} (personelNo: ${createdMudur.personelNo})`);
 
   // --- VELİLER ---
   const veliler = [
@@ -191,19 +187,25 @@ async function main() {
   ];
 
   for (const veli of veliler) {
-    const mevcut = await prisma.kullanici.findUnique({ where: { mail: veli.mail } });
-    if (mevcut) {
-      console.log(`⏭️  Veli zaten mevcut: ${veli.mail}`);
-      continue;
-    }
     const created = await prisma.kullanici.create({
       data: {
         ...veli,
         sifre: sifreHash,
         rol: 'VELI',
+        kimlikNo: nextKimlikNo++,
       },
     });
     console.log(`✅ Veli: ${created.mail}`);
+  }
+
+  // Mehmet Yılmaz öğrencisini velisi Hasan Yılmaz ile ilişkilendir
+  const veliHasanObj = await prisma.kullanici.findUnique({ where: { mail: 'hasan.yilmaz@veli.com' } });
+  if (veliHasanObj) {
+    await prisma.kullanici.update({
+      where: { mail: 'mehmet.yilmaz@ogrenci.com' },
+      data: { veli_ID: veliHasanObj.id }
+    });
+    console.log(`✅ Mehmet Yılmaz velisi Hasan Yılmaz olarak güncellendi.`);
   }
 
   // --- DİĞER PERSONELLER ---
@@ -221,21 +223,18 @@ async function main() {
   ];
 
   for (const p of digerPersoneller) {
-    const mevcut = await prisma.kullanici.findUnique({ where: { mail: p.mail } });
-    if (mevcut) {
-      console.log(`⏭️  Personel zaten mevcut: ${p.mail}`);
-      continue;
-    }
     const created = await prisma.kullanici.create({
       data: {
         ...p,
         sifre: sifreHash,
         rol: 'PERSONEL',
         personelNo: personelNo++,
+        kimlikNo: nextKimlikNo++,
       },
     });
     console.log(`✅ Personel: ${created.mail} (personelNo: ${created.personelNo})`);
   }
+
 
   // --- SINIFLAR ---
   const sinif12A = await prisma.sinif.upsert({
@@ -310,6 +309,186 @@ async function main() {
     }
   }
   console.log(`✅ Ödemeler örneği oluşturuldu.`);
+
+  // --- DUYURULAR, ÖDEVLER, MATERYALLER, SINAVLAR VE VELİ GÖRÜŞMELERİ ÖRNEK VERİLERİ ---
+  console.log('\nYeni modüller için örnek veriler ekleniyor...');
+
+  const ogretmenFatma = await prisma.kullanici.findFirst({ where: { mail: 'fatma.demir@dershane.com' } });
+  const veliHasan = await prisma.kullanici.findFirst({ where: { mail: 'hasan.yilmaz@veli.com' } });
+  const ogrenciMehmet = await prisma.kullanici.findFirst({ where: { mail: 'mehmet.yilmaz@ogrenci.com' } });
+  const ogrenciAyse = await prisma.kullanici.findFirst({ where: { mail: 'ayse.celik@ogrenci.com' } });
+
+  const bugun = new Date();
+
+  // 1. DUYURULAR
+  if (yonetici) {
+    await prisma.duyuru.createMany({
+      data: [
+        {
+          baslik: '2026-2027 Eğitim Öğretim Yılı Başlıyor!',
+          icerik: 'Yeni eğitim dönemimiz 7 Eylül 2026 tarihinde başlayacaktır. Tüm öğrencilerimize ve öğretmenlerimize şimdiden başarılar dileriz.',
+          hedefRol: 'HEPSI',
+          yazarId: yonetici.id,
+          tarih: new Date(bugun.getTime() - 2 * 24 * 60 * 60 * 1000)
+        },
+        {
+          baslik: 'Öğretmenler Zümre Toplantısı',
+          icerik: 'Haftalık zümre toplantısı Cuma günü saat 17:00\'de öğretmenler odasında gerçekleştirilecektir. Katılım zorunludur.',
+          hedefRol: 'OGRETMEN',
+          yazarId: yonetici.id,
+          tarih: new Date(bugun.getTime() - 1 * 24 * 60 * 60 * 1000)
+        },
+        {
+          baslik: 'Veli Bilgilendirme Semineri',
+          icerik: 'Öğrencilerimizin sınav hazırlık süreçleri ve motivasyon yönetimi üzerine velilerimize özel seminerimiz bu Cumartesi saat 14:00\'te konferans salonunda yapılacaktır.',
+          hedefRol: 'VELI',
+          yazarId: yonetici.id,
+          tarih: bugun
+        }
+      ]
+    });
+    console.log('✅ Duyuru örnekleri oluşturuldu.');
+  }
+
+  // 2. DERS MATERYALLERİ
+  if (sinif12A && ogretmenAhmet && dersMat) {
+    await prisma.dersMateryali.create({
+      data: {
+        baslik: 'Trigonometri Formül Kağıdı ve Soru Çözümleri',
+        aciklama: '12. Sınıf Matematik dersi Trigonometri ünitesi formül özeti ve örnek soru çözümleri içeren PDF dökümanı.',
+        dosyaUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        sinifId: sinif12A.id,
+        dersId: dersMat.id,
+        ogretmenId: ogretmenAhmet.id
+      }
+    });
+  }
+  if (sinif12A && ogretmenFatma && dersFizik) {
+    await prisma.dersMateryali.create({
+      data: {
+        baslik: 'Newton Hareket Yasaları Ders Notu',
+        aciklama: 'Fizik Dersi - Newton Hareket Yasaları (Dinamik) temel prensipleri ve çözümlü soruları.',
+        dosyaUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        sinifId: sinif12A.id,
+        dersId: dersFizik.id,
+        ogretmenId: ogretmenFatma.id
+      }
+    });
+  }
+  console.log('✅ Ders Materyalleri örnekleri oluşturuldu.');
+
+  // 3. ÖDEVLER VE ÖDEV TESLİMLERİ
+  if (sinif12A && ogretmenAhmet && dersMat) {
+    const odev1 = await prisma.odev.create({
+      data: {
+        baslik: 'Logaritma ve Üstel Fonksiyonlar Ödev Sayfası',
+        aciklama: 'Matematik soru bankası sayfa 110-115 arasındaki tüm testler çözülüp bitirilecek.',
+        teslimTarihi: new Date(bugun.getTime() + 5 * 24 * 60 * 60 * 1000),
+        sinifId: sinif12A.id,
+        dersId: dersMat.id,
+        ogretmenId: ogretmenAhmet.id
+      }
+    });
+
+    if (ogrenciMehmet && ogrenciAyse) {
+      await prisma.odevTeslim.createMany({
+        data: [
+          {
+            odevId: odev1.id,
+            ogrenciId: ogrenciMehmet.id,
+            tamamlandi: true,
+            tamamlanmaTarihi: new Date(bugun.getTime() - 4 * 60 * 60 * 1000)
+          },
+          {
+            odevId: odev1.id,
+            ogrenciId: ogrenciAyse.id,
+            tamamlandi: false
+          }
+        ]
+      });
+    }
+  }
+
+  if (sinif12A && ogretmenFatma && dersFizik) {
+    const odev2 = await prisma.odev.create({
+      data: {
+        baslik: 'Elektriksel Alan ve Potansiyel Soruları',
+        aciklama: 'Verilen PDF çalışma yaprağındaki 20 soru deftere çözümlü olarak yapılacak.',
+        teslimTarihi: new Date(bugun.getTime() + 3 * 24 * 60 * 60 * 1000),
+        sinifId: sinif12A.id,
+        dersId: dersFizik.id,
+        ogretmenId: ogretmenFatma.id
+      }
+    });
+
+    if (ogrenciMehmet && ogrenciAyse) {
+      await prisma.odevTeslim.createMany({
+        data: [
+          {
+            odevId: odev2.id,
+            ogrenciId: ogrenciMehmet.id,
+            tamamlandi: false
+          },
+          {
+            odevId: odev2.id,
+            ogrenciId: ogrenciAyse.id,
+            tamamlandi: true,
+            tamamlanmaTarihi: new Date(bugun.getTime() - 10 * 60 * 60 * 1000)
+          }
+        ]
+      });
+    }
+  }
+  console.log('✅ Ödev ve Ödev Teslim örnekleri oluşturuldu.');
+
+  // 4. SINAV TAKVİMİ
+  if (dersMat) {
+    await prisma.sinavTakvimi.create({
+      data: {
+        sinavAdi: 'Matematik 1. Dönem 1. Yazılı Sınavı',
+        tarih: new Date(bugun.getTime() + 8 * 24 * 60 * 60 * 1000),
+        dersId: dersMat.id
+      }
+    });
+  }
+  if (dersFizik) {
+    await prisma.sinavTakvimi.create({
+      data: {
+        sinavAdi: 'Fizik 1. Dönem 1. Yazılı Sınavı',
+        tarih: new Date(bugun.getTime() + 11 * 24 * 60 * 60 * 1000),
+        dersId: dersFizik.id
+      }
+    });
+  }
+  console.log('✅ Sınav Takvimi örnekleri oluşturuldu.');
+
+  // 5. VELİ GÖRÜŞMELERİ
+  if (veliHasan && ogretmenAhmet) {
+    await prisma.veliGorusme.create({
+      data: {
+        tarih: new Date(bugun.getTime() + 2 * 24 * 60 * 60 * 1000),
+        saat: '14:30',
+        durum: 'BEKLIYOR',
+        aciklama: 'Mehmet\'in son matematik deneme sınavı sonuçlarını değerlendirmek istiyorum.',
+        veliId: veliHasan.id,
+        ogretmenId: ogretmenAhmet.id
+      }
+    });
+  }
+
+  if (veliHasan && ogretmenFatma) {
+    await prisma.veliGorusme.create({
+      data: {
+        tarih: new Date(bugun.getTime() + 4 * 24 * 60 * 60 * 1000),
+        saat: '11:00',
+        durum: 'ONAYLANDI',
+        aciklama: 'Mehmet\'in genel derse katılımı ve ödev takibi üzerine rehberlik görüşmesi.',
+        veliId: veliHasan.id,
+        ogretmenId: ogretmenFatma.id
+      }
+    });
+  }
+  console.log('✅ Veli Görüşme örnekleri oluşturuldu.');
 
   console.log('\n🎉 Seed tamamlandı!');
 }

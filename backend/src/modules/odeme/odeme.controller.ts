@@ -39,5 +39,14 @@ export const OdemeController = {
     } catch (e) {
       next(e);
     }
+  },
+
+  getFinansalOzet: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const ozet = await OdemeService.getFinansalOzet();
+      res.json(ozet);
+    } catch (e) {
+      next(e);
+    }
   }
 };

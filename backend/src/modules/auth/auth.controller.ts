@@ -11,9 +11,11 @@ const REFRESH_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 
 const buildRefreshCookieOptions = () => ({
   httpOnly: true,
- 
+  // secure: false → Tauri https://tauri.localhost origin'i ile çalışabilmesi için
+  // sameSite: 'none' → Cross-origin POST requestlerinde cookie gönderilmesi için
+  // NOT: Production'da HTTPS kullanılıyorsa secure: true yapılmalı
   secure: false, 
-  sameSite: 'lax' as const,
+  sameSite: 'none' as const,
   maxAge: REFRESH_COOKIE_MAX_AGE,
   path: '/' 
 });

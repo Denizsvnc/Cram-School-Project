@@ -33,6 +33,7 @@ model Kullanici {
   rol          Roller   @default(OGRENCI)
   ogrenciNo    Int?     @unique
   personelNo   Int?     @unique
+  kimlikNo     Int?     @unique // 6 haneli benzersiz numara
 
   egitim_durumu String
   // Öğrenci İse zorunlu
@@ -62,6 +63,15 @@ model Kullanici {
   yoklamalar          Yoklama[]
   odemeler            Odeme[]
 
+  // Yeni Modüller için İlişkiler
+  duyurular            Duyuru[]
+  ogretmenOdevleri     Odev[]
+  ogrenciOdevTeslimler OdevTeslim[]
+  dersMateryalleri     DersMateryali[]
+  veliGorusmeleri      VeliGorusme[]     @relation("VeliGorusmeleri")
+  ogretmenGorusmeleri  VeliGorusme[]     @relation("OgretmenGorusmeleri")
+  izinTalepleri        IzinTalebi[]
+
   sessions Session[]
 
   aktifMi Boolean @default(true)
@@ -77,6 +87,8 @@ model Sinif {
 
   ogrenciler Kullanici[]
   programlar DersProgrami[]
+  odevler    Odev[]
+  materyaller DersMateryali[]
   aktifMi    Boolean        @default(true)
 }
 
@@ -87,6 +99,9 @@ model Ders {
   ders_suresi Int            @default(40)
   programlar  DersProgrami[]
   notlar      SinavNotu[]
+  odevler     Odev[]
+  materyaller DersMateryali[]
+  sinavTakvimi SinavTakvimi[]
 }
 
 model DersProgrami {
@@ -151,4 +166,96 @@ model Odeme {
   sonOdemeTarihi DateTime?
   durum          String    @default("BEKLIYOR") // BEKLIYOR, ODENDI, ONAYLANDI, IPTAL
   aciklama       String?
+}
+
+model Duyuru {
+  id       String   @id @default(uuid())
+  baslik   String   @db.VarChar(150)
+  icerik   String   @db.Text
+  hedefRol String   @default("HEPSI") // HEPSI, OGRETMEN, OGRENCI, VELI
+  tarih    DateTime @default(now())
+
+  yazarId  String
+  yazar    Kullanici @relation(fields: [yazarId], references: [id], onDelete: Cascade)
+}
+
+model Odev {
+  id            String   @id @default(uuid())
+  baslik        String   @db.VarChar(150)
+  aciklama      String   @db.Text
+  teslimTarihi  DateTime
+  createdAt     DateTime @default(now())
+
+  sinifId       String
+  sinif         Sinif    @relation(fields: [sinifId], references: [id], onDelete: Cascade)
+
+  dersId        String
+  ders          Ders     @relation(fields: [dersId], references: [id], onDelete: Cascade)
+
+  ogretmenId    String
+  ogretmen      Kullanici @relation(fields: [ogretmenId], references: [id], onDelete: Cascade)
+
+  teslimler     OdevTeslim[]
+}
+
+model OdevTeslim {
+  id                String    @id @default(uuid())
+  odevId            String
+  odev              Odev      @relation(fields: [odevId], references: [id], onDelete: Cascade)
+  ogrenciId         String
+  ogrenci           Kullanici @relation(fields: [ogrenciId], references: [id], onDelete: Cascade)
+  tamamlandi        Boolean   @default(false)
+  tamamlanmaTarihi  DateTime?
+}
+
+model DersMateryali {
+  id         String   @id @default(uuid())
+  baslik     String   @db.VarChar(150)
+  aciklama   String?  @db.Text
+  dosyaUrl   String   @db.Text
+  createdAt  DateTime @default(now())
+
+  sinifId    String
+  sinif      Sinif    @relation(fields: [sinifId], references: [id], onDelete: Cascade)
+
+  dersId     String
+  ders       Ders     @relation(fields: [dersId], references: [id], onDelete: Cascade)
+
+  ogretmenId String
+  ogretmen   Kullanici @relation(fields: [ogretmenId], references: [id], onDelete: Cascade)
+}
+
+model SinavTakvimi {
+  id       String   @id @default(uuid())
+  sinavAdi String   @db.VarChar(150)
+  tarih    DateTime
+
+  dersId   String
+  ders     Ders     @relation(fields: [dersId], references: [id], onDelete: Cascade)
+}
+
+model VeliGorusme {
+  id          String   @id @default(uuid())
+  tarih       DateTime
+  saat        String   @db.VarChar(10) // "14:30"
+  durum       String   @default("BEKLIYOR") // BEKLIYOR, ONAYLANDI, REDDEDILDI
+  aciklama    String?  @db.VarChar(250)
+
+  veliId      String
+  veli        Kullanici @relation("VeliGorusmeleri", fields: [veliId], references: [id], onDelete: Cascade)
+
+  ogretmenId  String
+  ogretmen    Kullanici @relation("OgretmenGorusmeleri", fields: [ogretmenId], references: [id], onDelete: Cascade)
+}
+
+model IzinTalebi {
+  id          String   @id @default(uuid())
+  baslangic   DateTime
+  bitis       DateTime
+  sebep       String   @db.Text
+  durum       String   @default("BEKLIYOR") // BEKLIYOR, ONAYLANDI, REDDEDILDI
+  createdAt   DateTime @default(now())
+
+  kullaniciId String
+  kullanici   Kullanici @relation(fields: [kullaniciId], references: [id], onDelete: Cascade)
 }

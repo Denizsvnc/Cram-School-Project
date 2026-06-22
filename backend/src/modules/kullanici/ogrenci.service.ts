@@ -182,8 +182,54 @@ export const ogrenciGuncelle = async (ogrenciNo: number, guncelVeriler: Partial<
         throw new NotFoundError(`${ogrenciNo} No'lu öğrenci bulunamadı.`);
     }
 
-    return await prisma.kullanici.update({
+    const updated = await prisma.kullanici.update({
         where: { ogrenciNo: ogrenciNo },
         data: guncelVeriler
     });
+
+    // Sınıfta hiç ödeme kaydı yoksa, ödeme planına göre otomatik oluştur
+    const existingPayments = await prisma.odeme.count({
+        where: { kullaniciId: updated.id }
+    });
+
+    if (existingPayments === 0) {
+        const tutar = updated.odeme_tutari ? Number(updated.odeme_tutari) : 0;
+        if (tutar > 0) {
+            const odemePlani = updated.odeme_plani || '';
+            const odemeDurumu = updated.odeme_durumu || false;
+            
+            if (odemePlani === 'Peşin') {
+                await prisma.odeme.create({
+                    data: {
+                        kullaniciId: updated.id,
+                        miktar: tutar,
+                        durum: odemeDurumu ? 'ONAYLANDI' : 'BEKLIYOR',
+                        aciklama: 'Peşin Ödeme',
+                        sonOdemeTarihi: odemeDurumu ? new Date() : null
+                    }
+                });
+            } else if (odemePlani === 'Aylık') {
+                const taksitSayisi = updated.taksit_sayisi ? Number(updated.taksit_sayisi) : 1;
+                const taksitMiktari = Math.round((tutar / taksitSayisi) * 100) / 100;
+                const taksitler = [];
+                const bugun = new Date();
+                for (let i = 1; i <= taksitSayisi; i++) {
+                    const sonTarih = new Date(bugun.getFullYear(), bugun.getMonth() + i - 1, bugun.getDate());
+                    taksitler.push({
+                        kullaniciId: updated.id,
+                        miktar: i === taksitSayisi ? (tutar - (taksitMiktari * (taksitSayisi - 1))) : taksitMiktari,
+                        durum: (i === 1 && odemeDurumu) ? 'ONAYLANDI' : 'BEKLIYOR',
+                        aciklama: `${i}. Taksit`,
+                        sonOdemeTarihi: (i === 1 && odemeDurumu) ? new Date() : null,
+                        tarih: sonTarih
+                    });
+                }
+                await prisma.odeme.createMany({
+                    data: taksitler
+                });
+            }
+        }
+    }
+
+    return updated;
 };

@@ -32,11 +32,11 @@ export const dersGetirIsimle = async (req: Request, res: Response, next: NextFun
 export const dersGuncelle = async (req: Request, res: Response, next: NextFunction) => {
     try{
         let { dersId } = req.params;
-        if (typeof dersId !== 'string' || isNaN(Number(dersId))) {
+        if (typeof dersId !== 'string' || !dersId) {
             throw new Error('dersId parametresi eksik veya hatalı.');
         }
         const dersData = req.body;
-        const updatedDers = await dersService.dersGuncelle(Number(dersId), dersData);
+        const updatedDers = await dersService.dersGuncelle(dersId, dersData);
         res.json(updatedDers); 
     } catch (err) { next(err); }
 }
@@ -44,10 +44,10 @@ export const dersGuncelle = async (req: Request, res: Response, next: NextFuncti
 export const dersSil = async (req: Request, res: Response, next: NextFunction) => {
     try{
         let { dersId } = req.params;
-        if (typeof dersId !== 'string' || isNaN(Number(dersId))) {
+        if (typeof dersId !== 'string' || !dersId) {
             throw new Error('dersId parametresi eksik veya hatalı.');
         }
-        await dersService.dersSil(Number(dersId));
+        await dersService.dersSil(dersId);
         res.status(204).send(); 
     } catch (err) { next(err); }
 }

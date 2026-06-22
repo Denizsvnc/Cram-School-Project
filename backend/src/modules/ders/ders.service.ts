@@ -31,29 +31,29 @@ export const dersGetirIsimle = async (dersIsmı: string)=>{
     return await dersToId(dersIsmı);
 }
 
-export const dersGuncelle = async (dersId: number, dersData: {isim?: string, ders_suresi?: number}) =>{
+export const dersGuncelle = async (dersId: string, dersData: {isim?: string, ders_suresi?: number}) => {
     const ders = await prisma.ders.findUnique({
-        where: { id: dersId.toString() },
+        where: { id: dersId },
     });
     if (!ders) {
         throw new NotFoundError('Ders bulunamadı.');
     }
     const updatedDers = await prisma.ders.update({
-        where: { id: dersId.toString() },
+        where: { id: dersId },
         data: dersData,
     });
     return updatedDers;
 }
 
-export const dersSil = async (dersId: number) =>{
+export const dersSil = async (dersId: string) => {
     const ders = await prisma.ders.findUnique({
-        where: { id: dersId.toString() },
+        where: { id: dersId },
     });
     if (!ders) {
         throw new NotFoundError('Ders bulunamadı.');
     }
     await prisma.ders.delete({
-        where: { id: dersId.toString() },
+        where: { id: dersId },
     });
 }
 

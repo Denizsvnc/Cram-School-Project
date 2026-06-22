@@ -11,6 +11,13 @@ const router = Router();
 // Yeni Kullanıcı Ekleme
 router.post('/ekle', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciOlusturValidation, validateRequest, kullaniciController.kullaniciOlustur);
 
+// Arşiv ve Geri Yükleme Rotaları
+router.get('/arsiv', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.arsivdekiKullanicilariGetir);
+router.post('/geri-yukle/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.kullaniciGeriYukle);
+
+// Kendi Profil Bilgilerini Getirme
+router.get('/profil', requireAuth, kullaniciController.profilGetir);
+
 // Öğrenci rotaları
 router.get('/ogrenciler', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), kullaniciController.ogrencileriGetir);
 router.get('/ogrenci/:ogrenciNo', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), kullaniciController.ogrenciGetirById);
@@ -18,9 +25,10 @@ router.delete("/ogrenci/:ogrenciNo", requireAuth, yetkiKontrol([Roller.YONETICI,
 router.put("/ogrenci/:ogrenciNo", requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciGuncelleValidation, validateRequest, kullaniciController.ogrenciGuncelle);
 
 // Personel listeleme rotaları
+router.post('/personel/toplu-maas-sifirla', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.topluMaasSifirla);
 router.get('/personeller', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.personelleriGetir);
 router.get('/mudurler', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.mudurleriGetir);
-router.get('/ogretmenler', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.ogretmenleriGetir);
+router.get('/ogretmenler', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.VELI]), kullaniciController.ogretmenleriGetir);
 router.get('/personel-listesi', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.personellerGetir);
 
 // Veli rotaları

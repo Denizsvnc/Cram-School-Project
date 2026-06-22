@@ -11,7 +11,8 @@ router.post('/olustur', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR
 router.put('/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), dersProgramiGuncelleValidation, validateRequest, dersProramiController.programGuncelle);
 router.delete('/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), dersProramiController.programSil);
 router.get('/:id', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN, Roller.OGRENCI, Roller.VELI]), dersProramiController.programGetir);
-router.get('/sinif/:sinifId', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), dersProramiController.sinifProgramlari);
+router.get('/sinif/:sinifId', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN, Roller.OGRENCI, Roller.VELI]), dersProramiController.sinifProgramlari);
 router.get('/ders/:dersId', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), dersProramiController.dersProgramlari);    
+router.get('/ogretmen/:ogretmenId', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.OGRETMEN]), dersProramiController.ogretmenProgramlari);
 
 export default router;
