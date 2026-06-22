@@ -28,7 +28,7 @@ router.put("/ogrenci/:ogrenciNo", requireAuth, yetkiKontrol([Roller.YONETICI, Ro
 router.post('/personel/toplu-maas-sifirla', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.topluMaasSifirla);
 router.get('/personeller', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.personelleriGetir);
 router.get('/mudurler', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.mudurleriGetir);
-router.get('/ogretmenler', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.VELI]), kullaniciController.ogretmenleriGetir);
+router.get('/ogretmenler', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR, Roller.VELI, Roller.OGRETMEN]), kullaniciController.ogretmenleriGetir);
 router.get('/personel-listesi', requireAuth, yetkiKontrol([Roller.YONETICI, Roller.MUDUR]), kullaniciController.personellerGetir);
 
 // Veli rotaları
